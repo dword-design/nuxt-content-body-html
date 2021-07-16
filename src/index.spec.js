@@ -36,6 +36,10 @@ export default tester(
       markdown: '<iframe></iframe>',
       result: '<iframe></iframe>',
     },
+    'non-markdown file': {
+      filename: 'home.json',
+      markdown: '"foo"',
+    },
     works: {
       markdown: endent`
         # Foo
@@ -51,7 +55,8 @@ export default tester(
   [
     {
       transform: test => async () => {
-        await outputFile('content/home.md', test.markdown)
+        test = { filename: 'home.md', ...test }
+        await outputFile(`content/${test.filename}`, test.markdown)
 
         const nuxt = new Nuxt({
           createRequire: 'native',
