@@ -65,6 +65,76 @@ $ yarn add nuxt-content-body-html
 ```
 <!-- /INSTALL -->
 
+Sometimes you need the raw HTML code of `@nuxt/content` documents for processing. A frequent use case is to generate an RSS feed and to add the HTML as `content:encoded`. The module will use the default remark and rehype plugins. You can also add additional plugins.
+
+## Usage
+
+Add the module to your `nuxt.config.js` file **before** `@nuxt/content`:
+
+```js
+export default {
+  modules: [
+    'nuxt-content-body-html',
+    '@nuxt/content',
+  },
+}
+```
+
+This will add a `doc.bodyHtml` property to all documents with the rendered body HTML code.
+
+It is also possible specifiy the name of the property like so:
+
+```js
+export default {
+  modules: [
+    ['nuxt-content-body-html', { fieldName: 'html' }],
+    '@nuxt/content',
+  ],
+}
+```
+
+Then you can access it via `doc.html`.
+
+## Adding more remark and rehype plugins
+
+It is possible to add additional plugins via the module config like so:
+
+```js
+export default {
+  modules: [
+    ['nuxt-content-body-html', {
+      remarkPlugins: [
+        'plugin1',
+        ['plugin2', { /* options */ }],
+      ],
+      rehypePlugins: [
+        'plugin1',
+        ['plugin2', { /* options */ }],
+      ],
+    }],
+    '@nuxt/content',
+  ],
+}
+```
+
+## Making URLs absolute for RSS feeds
+
+RSS feeds require URLs to be absolute. You can use [rehype-urls](https://github.com/brechtcs/rehype-urls) to make relative URLs absolute like so:
+
+```js
+// Set process.env.BASE_URL to the domain to prepend
+
+export default {
+  modules: [
+    ['nuxt-content-body-html', {
+      rehypePlugins: [
+        ['rehype-urls', url => (url.host ? url : new URL(url.href, process.env.BASE_URL))],
+    }],
+    '@nuxt/content',
+  ],
+}
+```
+
 <!-- LICENSE/ -->
 ## Contribute
 
