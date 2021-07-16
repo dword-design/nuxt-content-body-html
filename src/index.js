@@ -1,4 +1,5 @@
 import { fromPairs, keys, map, reduce } from '@dword-design/functions'
+import handlers from '@nuxt/content/parsers/markdown/handlers'
 import rehypeStringify from 'rehype-stringify'
 import remarkParse from 'remark-parse'
 import remarkRehype from 'remark-rehype'
@@ -33,25 +34,42 @@ export default function (options) {
       ])
       |> fromPairs),
   }
+  let contentOptions
+  this.nuxt.hook(
+    'content:options',
+    _contentOptions => (contentOptions = _contentOptions)
+  )
   let stream
-  this.nuxt.hook('content:options', contentOptions => {
-    const plugins = [
-      { instance: remarkParse },
-      ...contentOptions.markdown.remarkPlugins,
-      ...options.remarkPlugins,
-      { instance: remarkRehype, options: { allowDangerousHtml: true } },
-      ...contentOptions.markdown.rehypePlugins,
-      ...options.rehypePlugins,
-      { instance: rehypeStringify },
-    ]
-    stream =
-      plugins
-      |> reduce(
-        (acc, plugin) => acc.use(plugin.instance, plugin.options),
-        unified()
-      )
-  })
   this.nuxt.hook('content:file:beforeInsert', async file => {
+    if (
+      typeof contentOptions.highlighter === 'function' &&
+      contentOptions.highlighter.length === 0
+    ) {
+      contentOptions.highlighter = await contentOptions.highlighter()
+    }
+    if (stream === undefined) {
+      const plugins = [
+        { instance: remarkParse },
+        ...contentOptions.markdown.remarkPlugins,
+        ...options.remarkPlugins,
+        {
+          instance: remarkRehype,
+          options: {
+            allowDangerousHtml: true,
+            handlers: handlers(contentOptions.highlighter),
+          },
+        },
+        ...contentOptions.markdown.rehypePlugins,
+        ...options.rehypePlugins,
+        { instance: rehypeStringify },
+      ]
+      stream =
+        plugins
+        |> reduce(
+          (acc, plugin) => acc.use(plugin.instance, plugin.options),
+          unified()
+        )
+    }
     file[options.fieldName] = await new Promise((resolve, reject) =>
       stream.process(file.text, (error, result) =>
         error ? reject(error) : resolve(result.contents)

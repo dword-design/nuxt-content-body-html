@@ -46,6 +46,9 @@
     "nuxt": "^2.15.7",
     "rehype-urls": "^1.1.1"
   },
+  "peerDependencies": {
+    "@nuxt/content": "^1.14.0"
+  },
   "engines": {
     "node": ">=12"
   },

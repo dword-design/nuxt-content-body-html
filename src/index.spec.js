@@ -9,6 +9,17 @@ import { URL } from 'url'
 
 export default tester(
   {
+    code: {
+      markdown: endent`
+        \`\`\`js
+        export default () => {}
+        \`\`\`
+      `,
+      result: endent`
+        <div class="nuxt-content-highlight"><pre class="language-js line-numbers"><code><span class="token keyword module">export</span> <span class="token keyword module">default</span> <span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token arrow operator">=></span> <span class="token punctuation">{</span><span class="token punctuation">}</span>
+        </code></pre></div>
+      `,
+    },
     'custom rehype plugin': {
       markdown: '<a href="/bar">Link</a>',
       options: {
