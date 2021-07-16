@@ -50,7 +50,7 @@
 <!-- /BADGES -->
 
 <!-- DESCRIPTION/ -->
-
+Adds a property to each @nuxt/content document containing the raw HTML body, rendered from markdown.
 <!-- /DESCRIPTION -->
 
 <!-- INSTALL/ -->

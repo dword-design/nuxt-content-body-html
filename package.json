@@ -1,6 +1,16 @@
 {
   "name": "nuxt-content-body-html",
   "version": "1.0.0",
+  "description": "Adds a property to each @nuxt/content document containing the raw HTML body, rendered from markdown.",
+  "keywords": [
+    "rss",
+    "nuxt",
+    "body",
+    "feed",
+    "nuxtjs",
+    "nuxt-module",
+    "nuxt-content"
+  ],
   "repository": "dword-design/nuxt-content-body-html",
   "funding": "https://github.com/sponsors/dword-design",
   "license": "MIT",
@@ -41,15 +51,5 @@
   },
   "publishConfig": {
     "access": "public"
-  },
-  "description": "Adds a property to each @nuxt/content document containing the raw HTML body, rendered from markdown.",
-  "keywords": [
-    "rss",
-    "nuxt",
-    "body",
-    "feed",
-    "nuxtjs",
-    "nuxt-module",
-    "nuxt-content"
-  ]
+  }
 }
