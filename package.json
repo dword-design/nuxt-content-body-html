@@ -41,5 +41,15 @@
   },
   "publishConfig": {
     "access": "public"
-  }
+  },
+  "description": "Adds a property to each @nuxt/content document containing the raw HTML body, rendered from markdown.",
+  "keywords": [
+    "rss",
+    "nuxt",
+    "body",
+    "feed",
+    "nuxtjs",
+    "nuxt-module",
+    "nuxt-content"
+  ]
 }
