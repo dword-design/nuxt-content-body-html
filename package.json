@@ -1,0 +1,45 @@
+{
+  "name": "nuxt-content-body-html",
+  "version": "1.0.0",
+  "repository": "dword-design/nuxt-content-body-html",
+  "funding": "https://github.com/sponsors/dword-design",
+  "license": "MIT",
+  "author": "Sebastian Landwehr <info@sebastianlandwehr.com>",
+  "main": "dist/index.js",
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "checkUnknownFiles": "base checkUnknownFiles",
+    "commit": "base commit",
+    "dev": "base dev",
+    "lint": "base lint",
+    "prepare": "base prepare",
+    "prepublishOnly": "base prepublishOnly",
+    "test": "base test"
+  },
+  "dependencies": {
+    "@dword-design/functions": "^4.0.5",
+    "rehype-stringify": "^8.0.0",
+    "remark-parse": "^9.0.0",
+    "remark-rehype": "^8.1.0",
+    "unified": "^9.0.0"
+  },
+  "devDependencies": {
+    "@dword-design/base": "^8.5.0",
+    "@dword-design/tester": "^2.0.7",
+    "@dword-design/tester-plugin-tmp-dir": "^2.1.2",
+    "@nuxt/content": "^1.14.0",
+    "axios": "^0.21.1",
+    "depcheck-package-name": "^2.0.3",
+    "fs-extra": "^10.0.0",
+    "nuxt": "^2.15.7",
+    "rehype-urls": "^1.1.1"
+  },
+  "engines": {
+    "node": ">=12"
+  },
+  "publishConfig": {
+    "access": "public"
+  }
+}
