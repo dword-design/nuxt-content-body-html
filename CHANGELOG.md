@@ -1,3 +1,10 @@
+## [1.0.4](https://github.com/dword-design/nuxt-content-body-html/compare/v1.0.3...v1.0.4) (2021-07-17)
+
+
+### Bug Fixes
+
+* update config files ([081b06a](https://github.com/dword-design/nuxt-content-body-html/commit/081b06a667b593c1865795a1c25cdb363a577f70))
+
 ## [1.0.3](https://github.com/dword-design/nuxt-content-body-html/compare/v1.0.2...v1.0.3) (2021-07-17)
 
 
