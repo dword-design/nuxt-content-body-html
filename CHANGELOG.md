@@ -1,3 +1,10 @@
+## [1.0.3](https://github.com/dword-design/nuxt-content-body-html/compare/v1.0.2...v1.0.3) (2021-07-17)
+
+
+### Bug Fixes
+
+* only run for md files ([bc11d5b](https://github.com/dword-design/nuxt-content-body-html/commit/bc11d5b7269d124bcdf27a02ee9f2129c7fe3eb6))
+
 ## [1.0.2](https://github.com/dword-design/nuxt-content-body-html/compare/v1.0.1...v1.0.2) (2021-07-16)
 
 
