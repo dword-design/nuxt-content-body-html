@@ -93,7 +93,7 @@ export default {
 }
 ```
 
-Then you can access it via `doc.html`.
+Then you can access it via `doc.bodyHtml`.
 
 ## Adding more remark and rehype plugins
 
