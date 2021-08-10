@@ -1,4 +1,4 @@
-import { fromPairs, keys, map, reduce } from '@dword-design/functions'
+import { fromPairs, keys, map, pick, reduce } from '@dword-design/functions'
 import handlers from '@nuxt/content/parsers/markdown/handlers'
 import rehypeStringify from 'rehype-stringify'
 import remarkParse from 'remark-parse'
@@ -34,33 +34,48 @@ export default function (options) {
       ])
       |> fromPairs),
   }
-  let contentOptions
   this.nuxt.hook(
     'content:options',
-    _contentOptions => (contentOptions = _contentOptions)
+    contentOptions =>
+      (options = {
+        ...(contentOptions |> pick(['highlighter'])),
+        ...options,
+        rehypePlugins: [
+          ...contentOptions.markdown.rehypePlugins,
+          ...(options.rehypePlugins || []),
+        ],
+        remarkPlugins: [
+          ...contentOptions.markdown.remarkPlugins,
+          ...(options.remarkPlugins || []),
+        ],
+      })
   )
   let stream
   this.nuxt.hook('content:file:beforeInsert', async file => {
     if (file.extension === '.md') {
-      if (
-        typeof contentOptions.highlighter === 'function' &&
-        contentOptions.highlighter.length === 0
-      ) {
-        contentOptions.highlighter = await contentOptions.highlighter()
-      }
       if (stream === undefined) {
+        if (
+          typeof options.highlighter === 'function' &&
+          options.highlighter.length === 0
+        ) {
+          options.highlighter = await options.highlighter()
+        }
+
+        const myHandlers = handlers(options.highlighter)
+        if ('highlighter' in options && !options.highlighter) {
+          delete myHandlers.code
+        }
+
         const plugins = [
           { instance: remarkParse },
-          ...contentOptions.markdown.remarkPlugins,
           ...options.remarkPlugins,
           {
             instance: remarkRehype,
             options: {
               allowDangerousHtml: true,
-              handlers: handlers(contentOptions.highlighter),
+              handlers: myHandlers,
             },
           },
-          ...contentOptions.markdown.rehypePlugins,
           ...options.rehypePlugins,
           { instance: rehypeStringify },
         ]

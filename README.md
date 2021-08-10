@@ -105,11 +105,11 @@ export default {
     ['nuxt-content-body-html', {
       remarkPlugins: [
         'plugin1',
-        ['plugin2', { /* options */ }],
+        ['plugin2', { /* options */ }],
       ],
       rehypePlugins: [
         'plugin1',
-        ['plugin2', { /* options */ }],
+        ['plugin2', { /* options */ }],
       ],
     }],
     '@nuxt/content',
@@ -117,9 +117,30 @@ export default {
 }
 ```
 
-## Making URLs absolute for RSS feeds
+## Overriding or disabling the highlighter
 
-RSS feeds require URLs to be absolute. You can use [rehype-urls](https://github.com/brechtcs/rehype-urls) to make relative URLs absolute like so:
+You can explicitly override or disable the highlighter by passing it as as an option:
+
+```js
+export default {
+  modules: [
+    ['nuxt-content-body-html', {
+      // Pass a custom highlighter
+      highlighter: customHighlighter,
+
+      // Disable the highlighter
+      highlighter: undefined,
+    }],
+    '@nuxt/content',
+  ],
+}
+```
+
+## Usage for RSS feeds
+
+You can customize the module so that you can use the resulting HTML code for RSS feeds.
+
+Firstly, RSS feeds require URLs to be absolute. You can use [rehype-urls](https://github.com/brechtcs/rehype-urls) to make relative URLs absolute. Also, you want to disable the highlighter, so that the code tags are remained.
 
 ```js
 // Set process.env.BASE_URL to the domain to prepend
@@ -127,8 +148,10 @@ RSS feeds require URLs to be absolute. You can use [rehype-urls](https://github.
 export default {
   modules: [
     ['nuxt-content-body-html', {
+      highlighter: undefined,
       rehypePlugins: [
         ['rehype-urls', url => (url.host ? url : new URL(url.href, process.env.BASE_URL))],
+      ],
     }],
     '@nuxt/content',
   ],

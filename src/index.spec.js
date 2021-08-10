@@ -36,6 +36,20 @@ export default tester(
       markdown: '<iframe></iframe>',
       result: '<iframe></iframe>',
     },
+    'no highlighter': {
+      markdown: endent`
+        \`\`\`js
+        export default () => {}
+        \`\`\`
+      `,
+      options: {
+        highlighter: undefined,
+      },
+      result: endent`
+        <pre><code class="language-js">export default () => {}
+        </code></pre>
+      `,
+    },
     'non-markdown file': {
       filename: 'home.json',
       markdown: '"foo"',
