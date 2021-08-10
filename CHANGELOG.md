@@ -1,3 +1,10 @@
+# [1.1.0](https://github.com/dword-design/nuxt-content-body-html/compare/v1.0.6...v1.1.0) (2021-08-10)
+
+
+### Features
+
+* allow to disable the highlighter ([e037f22](https://github.com/dword-design/nuxt-content-body-html/commit/e037f2243a24ff48dc02ffa5b1e171ce8be168ba))
+
 ## [1.0.6](https://github.com/dword-design/nuxt-content-body-html/compare/v1.0.5...v1.0.6) (2021-07-20)
 
 
