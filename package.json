@@ -40,7 +40,7 @@
     "@dword-design/tester": "^2.0.7",
     "@dword-design/tester-plugin-tmp-dir": "^2.1.2",
     "@nuxt/content": "^1.14.0",
-    "axios": "^0.21.1",
+    "axios": "^0.22.0",
     "depcheck-package-name": "^2.0.3",
     "fs-extra": "^10.0.0",
     "nuxt": "^2.15.7",
