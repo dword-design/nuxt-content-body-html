@@ -1,3 +1,10 @@
+## [1.1.1](https://github.com/dword-design/nuxt-content-body-html/compare/v1.1.0...v1.1.1) (2021-10-05)
+
+
+### Bug Fixes
+
+* update dependency axios to ^0.22.0 ([494a011](https://github.com/dword-design/nuxt-content-body-html/commit/494a0112b9ae0e46b0e179c7067b674fff8cd407))
+
 # [1.1.0](https://github.com/dword-design/nuxt-content-body-html/compare/v1.0.6...v1.1.0) (2021-08-10)
 
 
