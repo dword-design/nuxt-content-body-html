@@ -1,3 +1,10 @@
+## [1.1.2](https://github.com/dword-design/nuxt-content-body-html/compare/v1.1.1...v1.1.2) (2022-01-04)
+
+
+### Bug Fixes
+
+* lock file maintenance ([#36](https://github.com/dword-design/nuxt-content-body-html/issues/36)) ([818b03c](https://github.com/dword-design/nuxt-content-body-html/commit/818b03c0ae65e9803e15e409039de98843ec2245))
+
 ## [1.1.1](https://github.com/dword-design/nuxt-content-body-html/compare/v1.1.0...v1.1.1) (2021-10-05)
 
 
