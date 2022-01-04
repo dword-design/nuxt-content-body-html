@@ -3,7 +3,7 @@
 <!-- /TITLE -->
 
 <!-- BADGES/ -->
-  <p>
+<p>
     <a href="https://npmjs.org/package/nuxt-content-body-html">
       <img
         src="https://img.shields.io/npm/v/nuxt-content-body-html.svg"
