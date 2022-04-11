@@ -31,7 +31,7 @@
   "dependencies": {
     "@dword-design/functions": "^4.0.5",
     "rehype-stringify": "^8.0.0",
-    "remark-parse": "^9.0.0",
+    "remark-parse": "^10.0.0",
     "remark-rehype": "^8.1.0",
     "unified": "^9.0.0"
   },
