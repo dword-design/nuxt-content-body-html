@@ -39,7 +39,7 @@
     "@dword-design/base": "^8.5.0",
     "@dword-design/tester": "^2.0.7",
     "@dword-design/tester-plugin-tmp-dir": "^2.1.2",
-    "@nuxt/content": "^1.14.0",
+    "@nuxt/content": "^2.0.0",
     "axios": "^0.22.0",
     "depcheck-package-name": "^2.0.3",
     "fs-extra": "^10.0.0",
@@ -47,7 +47,7 @@
     "rehype-urls": "^1.1.1"
   },
   "peerDependencies": {
-    "@nuxt/content": "^1.14.0"
+    "@nuxt/content": "^2.0.0"
   },
   "engines": {
     "node": ">=12"
