@@ -4,12 +4,7 @@
 
 <!-- BADGES/ -->
   <p>
-    <a href="https://npmjs.org/package/nuxt-content-body-html">
-      <img
-        src="https://img.shields.io/npm/v/nuxt-content-body-html.svg"
-        alt="npm version"
-      >
-    </a><img src="https://img.shields.io/badge/os-linux%20%7C%C2%A0macos%20%7C%C2%A0windows-blue" alt="Linux macOS Windows compatible"><a href="https://github.com/dword-design/nuxt-content-body-html/actions">
+    <img src="https://img.shields.io/badge/os-linux%20%7C%C2%A0macos%20%7C%C2%A0windows-blue" alt="Linux macOS Windows compatible"><a href="https://github.com/dword-design/nuxt-content-body-html/actions">
       <img
         src="https://github.com/dword-design/nuxt-content-body-html/workflows/build/badge.svg"
         alt="Build status"

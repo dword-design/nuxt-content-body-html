@@ -1,11 +1,16 @@
 import { fromPairs, keys, map, pick, reduce } from '@dword-design/functions'
-import handlers from '@nuxt/content/parsers/markdown/handlers'
+import handlers from '@nuxt/content/parsers/markdown/handlers/index.js'
+import jiti from 'jiti'
 import rehypeStringify from 'rehype-stringify'
 import remarkParse from 'remark-parse'
 import remarkRehype from 'remark-rehype'
-import unified from 'unified'
+import { unified } from 'unified'
 
 export default function (options) {
+  const jitiInstance = jiti(process.cwd(), {
+    esmResolve: true,
+    interopDefault: true,
+  })
   options = {
     fieldName: 'bodyHtml',
     rehypePlugins: [],
@@ -28,7 +33,7 @@ export default function (options) {
             ...plugin,
             instance:
               typeof plugin.instance === 'string'
-                ? require(plugin.instance)
+                ? jitiInstance(plugin.instance)
                 : plugin.instance,
           })),
       ])
@@ -88,7 +93,7 @@ export default function (options) {
       }
       file[options.fieldName] = await new Promise((resolve, reject) =>
         stream.process(file.text, (error, result) =>
-          error ? reject(error) : resolve(result.contents)
+          error ? reject(error) : resolve(result.value)
         )
       )
     }
