@@ -1,3 +1,15 @@
+# [2.0.0](https://github.com/dword-design/nuxt-content-body-html/compare/v1.1.3...v2.0.0) (2023-01-08)
+
+
+### Bug Fixes
+
+* lock file maintenance ([#59](https://github.com/dword-design/nuxt-content-body-html/issues/59)) ([01172b3](https://github.com/dword-design/nuxt-content-body-html/commit/01172b3a14388983c620d78734c75462bd39f555))
+
+
+### BREAKING CHANGES
+
+* Drop Node 12 support
+
 ## [1.1.3](https://github.com/dword-design/nuxt-content-body-html/compare/v1.1.2...v1.1.3) (2022-01-12)
 
 
