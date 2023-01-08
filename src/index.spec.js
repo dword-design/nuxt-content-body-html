@@ -7,6 +7,8 @@ import { outputFile } from 'fs-extra'
 import { Builder, Nuxt } from 'nuxt'
 import { URL } from 'url'
 
+import self from './index.js'
+
 export default tester(
   {
     code: {
@@ -73,9 +75,8 @@ export default tester(
         await outputFile(`content/${test.filename}`, test.markdown)
 
         const nuxt = new Nuxt({
-          createRequire: 'native',
           dev: false,
-          modules: ['~/../src', packageName`@nuxt/content`],
+          modules: [self, packageName`@nuxt/content`],
           nuxtContentBodyHtml: test.options,
         })
         await new Builder(nuxt).build()
