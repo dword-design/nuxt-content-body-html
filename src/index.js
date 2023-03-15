@@ -53,7 +53,7 @@ export default function (options) {
           ...contentOptions.markdown.remarkPlugins,
           ...(options.remarkPlugins || []),
         ],
-      })
+      }),
   )
   let stream
   this.nuxt.hook('content:file:beforeInsert', async file => {
@@ -88,13 +88,13 @@ export default function (options) {
           plugins
           |> reduce(
             (acc, plugin) => acc.use(plugin.instance, plugin.options),
-            unified()
+            unified(),
           )
       }
       file[options.fieldName] = await new Promise((resolve, reject) =>
         stream.process(file.text, (error, result) =>
-          error ? reject(error) : resolve(result.value)
-        )
+          error ? reject(error) : resolve(result.value),
+        ),
       )
     }
   })
