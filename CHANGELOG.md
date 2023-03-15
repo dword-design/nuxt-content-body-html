@@ -1,3 +1,10 @@
+## [2.0.2](https://github.com/dword-design/nuxt-content-body-html/compare/v2.0.1...v2.0.2) (2023-03-15)
+
+
+### Bug Fixes
+
+* update dependency jiti to v1.18.2 ([24fc42a](https://github.com/dword-design/nuxt-content-body-html/commit/24fc42a6774a5aaddbc69787d2fb16b47a759a8d))
+
 ## [2.0.1](https://github.com/dword-design/nuxt-content-body-html/compare/v2.0.0...v2.0.1) (2023-03-15)
 
 
