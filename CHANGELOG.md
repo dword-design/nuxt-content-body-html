@@ -1,3 +1,10 @@
+## [2.0.4](https://github.com/dword-design/nuxt-content-body-html/compare/v2.0.3...v2.0.4) (2023-03-16)
+
+
+### Bug Fixes
+
+* update dependency nuxt to v2.16.2 ([3d20de4](https://github.com/dword-design/nuxt-content-body-html/commit/3d20de45bd113ca0348a9bcd8735a1d24cbb20a7))
+
 ## [2.0.3](https://github.com/dword-design/nuxt-content-body-html/compare/v2.0.2...v2.0.3) (2023-03-15)
 
 
