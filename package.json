@@ -1,6 +1,6 @@
 {
   "name": "nuxt-content-body-html",
-  "version": "2.0.4",
+  "version": "2.0.5",
   "description": "Adds a property to each @nuxt/content document containing the raw HTML body, rendered from markdown.",
   "keywords": [
     "rss",
