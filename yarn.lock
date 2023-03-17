@@ -1740,9 +1740,9 @@
   integrity sha512-vLTve5Gc3+c/ywvBh1wkDQv8EChkiuXOeloLUYAa446q7k5ZYrZYtVzCfcMKNN3cnbg7cJBUkEwW/+lEYOpqdQ==
 
 "@dword-design/tester-plugin-tmp-dir@^2.1.2":
-  version "2.1.10"
-  resolved "https://registry.yarnpkg.com/@dword-design/tester-plugin-tmp-dir/-/tester-plugin-tmp-dir-2.1.10.tgz#77f59181fd2a80e8c3cfafbd5c1af3a97ac0e3cf"
-  integrity sha512-xO3zqJX8V5ST9Ra1gNZRN9PKgyNQTrTgZnzAULeybtcnqbgHG8wydJx/ghGi6yNVk1buH2L7Cr3yN36Lk03PvQ==
+  version "2.1.13"
+  resolved "https://registry.yarnpkg.com/@dword-design/tester-plugin-tmp-dir/-/tester-plugin-tmp-dir-2.1.13.tgz#c3b4a4805aefc594debef8379e5b92192d7c7e85"
+  integrity sha512-EDYFHX9C266mXBQdyJ1I2Ltx24IdkTm+8yBsggq3+e3ht0owBLXLfQ6mfAshml/c9z4xxl0DfP7Q7P8kIk9e6g==
   dependencies:
     with-local-tmp-dir "^5.0.0"
 
