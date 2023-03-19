@@ -1,3 +1,10 @@
+## [2.0.8](https://github.com/dword-design/nuxt-content-body-html/compare/v2.0.7...v2.0.8) (2023-03-19)
+
+
+### Bug Fixes
+
+* update dependency @dword-design/tester-plugin-tmp-dir to v2.1.15 ([9540bef](https://github.com/dword-design/nuxt-content-body-html/commit/9540bef2b535895921672793bae77cc6ad5d3c1c))
+
 ## [2.0.7](https://github.com/dword-design/nuxt-content-body-html/compare/v2.0.6...v2.0.7) (2023-03-18)
 
 
