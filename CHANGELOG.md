@@ -1,3 +1,10 @@
+## [2.0.16](https://github.com/dword-design/nuxt-content-body-html/compare/v2.0.15...v2.0.16) (2023-04-11)
+
+
+### Bug Fixes
+
+* update dependency @dword-design/tester to v2.0.18 ([9f70227](https://github.com/dword-design/nuxt-content-body-html/commit/9f7022722ec89be15d329c85e96b1eb6f498f269))
+
 ## [2.0.15](https://github.com/dword-design/nuxt-content-body-html/compare/v2.0.14...v2.0.15) (2023-04-10)
 
 
