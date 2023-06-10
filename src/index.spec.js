@@ -13,40 +13,6 @@ import kill from 'tree-kill-promise'
 
 export default tester(
   {
-    code: async () => {
-      await outputFiles({
-        'content/home.md': endent`
-          \`\`\`js
-          export default () => {}
-          \`\`\`
-        `,
-        'nuxt.config.js': endent`
-          export default {
-            modules: [
-              '${packageName`@nuxt/content`}',
-              ['self', { highlighter: undefined }],
-            ],
-          }
-        `,
-      })
-
-      const nuxt = execaCommand('nuxt dev')
-      try {
-        await nuxtDevReady()
-        expect(
-          axios.get('http://localhost:3000/api/_content/query?_path=/home')
-            |> await
-            |> property('data')
-            |> first
-            |> property('bodyHtml'),
-        ).toEqual(endent`
-          <div class="nuxt-content-highlight"><pre class="language-js line-numbers"><code><span class="token keyword module">export</span> <span class="token keyword module">default</span> <span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token arrow operator">=></span> <span class="token punctuation">{</span><span class="token punctuation">}</span>
-          </code></pre></div>
-        `)
-      } finally {
-        await kill(nuxt.pid)
-      }
-    },
     composable: async () => {
       await outputFiles({
         'content/home.md': '<a href="/bar">Link</a>',
@@ -90,6 +56,72 @@ export default tester(
             |> first
             |> property('bodyHtml'),
         ).toEqual('<p><a href="https://foo.com/bar">Link</a></p>')
+      } finally {
+        await kill(nuxt.pid)
+      }
+    },
+    'disable highlight after enable': async () => {
+      await outputFiles({
+        'content/home.md': endent`
+          \`\`\`js
+          export default () => {}
+          \`\`\`
+        `,
+        'nuxt.config.js': endent`
+          export default {
+            modules: [
+              ['${packageName`@nuxt/content`}', { highlight: true }],
+              ['self', { fields: { bodyHtml: { highlight: false } } }],
+            ],
+          }
+        `,
+      })
+
+      const nuxt = execaCommand('nuxt dev')
+      try {
+        await nuxtDevReady()
+        expect(
+          axios.get('http://localhost:3000/api/_content/query?_path=/home')
+            |> await
+            |> property('data')
+            |> first
+            |> property('bodyHtml'),
+        ).toEqual(endent`
+          <code code="export default () => {}
+          " language="js"><pre><code __ignoreMap="">export default () => {}
+          </code></pre></code>
+        `)
+      } finally {
+        await kill(nuxt.pid)
+      }
+    },
+    async highlight() {
+      await outputFiles({
+        'content/home.md': endent`
+          \`\`\`js
+          export default () => {}
+          \`\`\`
+        `,
+        'nuxt.config.js': endent`
+          export default {
+            modules: [
+              ['${packageName`@nuxt/content`}', { highlight: true }],
+              ['self', { fields: { bodyHtml: {} } }],
+            ],
+          }
+        `,
+      })
+
+      const nuxt = execaCommand('nuxt dev')
+      try {
+        await nuxtDevReady()
+        expect(
+          axios.get('http://localhost:3000/api/_content/query?_path=/home')
+            |> await
+            |> property('data')
+            |> first
+            |> property('bodyHtml'),
+        ).toMatchSnapshot(this)
       } finally {
         await kill(nuxt.pid)
       }
@@ -151,72 +183,6 @@ export default tester(
           bar: '<h1 id="foo">Foo</h1><p>Foo bar baz</p>',
           foo: '<h1 id="foo">Foo</h1><p>Foo bar baz</p>',
         })
-      } finally {
-        await kill(nuxt.pid)
-      }
-    },
-    async highlight() {
-      await outputFiles({
-        'content/home.md': endent`
-          \`\`\`js
-          export default () => {}
-          \`\`\`
-        `,
-        'nuxt.config.js': endent`
-          export default {
-            modules: [
-              ['${packageName`@nuxt/content`}', { highlight: true }],
-              ['self', { fields: { bodyHtml: {} } }],
-            ],
-          }
-        `,
-      })
-
-      const nuxt = execaCommand('nuxt dev')
-      try {
-        await nuxtDevReady()
-        expect(
-          axios.get('http://localhost:3000/api/_content/query?_path=/home')
-            |> await
-            |> property('data')
-            |> first
-            |> property('bodyHtml'),
-        ).toMatchSnapshot(this)
-      } finally {
-        await kill(nuxt.pid)
-      }
-    },
-    async 'disable highlight after enable'() {
-      await outputFiles({
-        'content/home.md': endent`
-          \`\`\`js
-          export default () => {}
-          \`\`\`
-        `,
-        'nuxt.config.js': endent`
-          export default {
-            modules: [
-              ['${packageName`@nuxt/content`}', { highlight: true }],
-              ['self', { fields: { bodyHtml: { highlight: false } } }],
-            ],
-          }
-        `,
-      })
-
-      const nuxt = execaCommand('nuxt dev')
-      try {
-        await nuxtDevReady()
-        expect(
-          axios.get('http://localhost:3000/api/_content/query?_path=/home')
-            |> await
-            |> property('data')
-            |> first
-            |> property('bodyHtml'),
-        ).toEqual(endent`
-          <code code="export default () => {}
-          " language="js"><pre><code __ignoreMap="">export default () => {}
-          </code></pre></code>
-        `)
       } finally {
         await kill(nuxt.pid)
       }

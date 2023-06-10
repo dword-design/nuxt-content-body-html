@@ -1,8 +1,9 @@
 import { transformContent } from '@nuxt/content/transformers'
+import defu from 'defu'
 import { toHtml } from 'hast-util-to-html'
 import { mapKeys, pick } from 'lodash-es'
+
 import { useRuntimeConfig } from '#imports'
-import defu from 'defu'
 
 const runtimeConfig = useRuntimeConfig()
 
@@ -24,7 +25,18 @@ const revertBodyChanges = element => ({
 
 export const useNuxtContentBodyHtml = () => ({
   generate: async (file, options = {}) => {
-    options = defu({ highlight: options.highlight, markdown: pick(options, ['remarkPlugins', 'rehypePlugins']) }, runtimeConfig.content)
-    return toHtml(revertBodyChanges((await transformContent(file._id, file.body, options)).body))
+    options = defu(
+      {
+        highlight: options.highlight,
+        markdown: pick(options, ['remarkPlugins', 'rehypePlugins']),
+      },
+      runtimeConfig.content,
+    )
+
+    return toHtml(
+      revertBodyChanges(
+        (await transformContent(file._id, file.body, options)).body,
+      ),
+    )
   },
 })
