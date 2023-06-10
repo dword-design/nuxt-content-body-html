@@ -1,101 +1,47 @@
-import { fromPairs, keys, map, pick, reduce } from '@dword-design/functions'
-import handlers from '@nuxt/content/parsers/markdown/handlers/index.js'
-import jiti from 'jiti'
-import rehypeStringify from 'rehype-stringify'
-import remarkParse from 'remark-parse'
-import remarkRehype from 'remark-rehype'
-import { unified } from 'unified'
+import {
+  addServerPlugin,
+  createResolver,
+  isNuxt3 as isNuxt3Try,
+} from '@nuxt/kit'
 
-export default function (options) {
-  const jitiInstance = jiti(process.cwd(), {
-    esmResolve: true,
-    interopDefault: true,
-  })
+const resolver = createResolver(import.meta.url)
+
+export default function (options, nuxt) {
+  let isNuxt3 = true
+  try {
+    isNuxt3 = isNuxt3Try()
+  } catch {
+    isNuxt3 = false
+  }
+  nuxt = nuxt || this
   options = {
-    fieldName: 'bodyHtml',
-    rehypePlugins: [],
-    remarkPlugins: [],
-    ...this.options.nuxtContentBodyHtml,
+    ...isNuxt3 && { fieldName: 'bodyHtml' },
+    fields: {},
+    ...(isNuxt3 && nuxt.options.runtimeConfig.nuxtContentBodyHtml),
+    ...nuxt.options.nuxtContentBodyHtml,
     ...options,
   }
-  options = {
-    ...options,
-    ...({ rehype: true, remark: true }
-      |> keys
-      |> map(type => [
-        `${type}Plugins`,
-        options[`${type}Plugins`]
-          |> map(plugin => ({
-            instance: Array.isArray(plugin) ? plugin[0] : plugin,
-            options: Array.isArray(plugin) ? plugin[1] : [],
-          }))
-          |> map(plugin => ({
-            ...plugin,
-            instance:
-              typeof plugin.instance === 'string'
-                ? jitiInstance(plugin.instance)
-                : plugin.instance,
-          })),
-      ])
-      |> fromPairs),
+  if (Array.isArray(options.fields)) {
+    options.fields = Object.fromEntries(
+      options.fields.map(field => [field, {}]),
+    )
   }
-  this.nuxt.hook(
-    'content:options',
-    contentOptions =>
-      (options = {
-        ...(contentOptions |> pick(['highlighter'])),
-        ...options,
-        rehypePlugins: [
-          ...contentOptions.markdown.rehypePlugins,
-          ...(options.rehypePlugins || []),
-        ],
-        remarkPlugins: [
-          ...contentOptions.markdown.remarkPlugins,
-          ...(options.remarkPlugins || []),
-        ],
-      }),
-  )
-  let stream
-  this.nuxt.hook('content:file:beforeInsert', async file => {
-    if (file.extension === '.md') {
-      if (stream === undefined) {
-        if (
-          typeof options.highlighter === 'function' &&
-          options.highlighter.length === 0
-        ) {
-          options.highlighter = await options.highlighter()
-        }
-
-        const myHandlers = handlers(options.highlighter)
-        if ('highlighter' in options && !options.highlighter) {
-          delete myHandlers.code
-        }
-
-        const plugins = [
-          { instance: remarkParse },
-          ...options.remarkPlugins,
-          {
-            instance: remarkRehype,
-            options: {
-              allowDangerousHtml: true,
-              handlers: myHandlers,
-            },
-          },
-          ...options.rehypePlugins,
-          { instance: rehypeStringify },
-        ]
-        stream =
-          plugins
-          |> reduce(
-            (acc, plugin) => acc.use(plugin.instance, plugin.options),
-            unified(),
-          )
+  if (options.fieldName) {
+    options.fields[options.fieldName] = {}
+  }
+  if (isNuxt3 && Object.keys(options.fields).length > 0) {
+    nuxt.options.runtimeConfig.nuxtContentBodyHtml = options
+    nuxt.hook('nitro:config', (nitroConfig) => {
+      if (!nitroConfig.imports) {
+        nitroConfig.imports = {
+          imports: [],
+        };
       }
-      file[options.fieldName] = await new Promise((resolve, reject) =>
-        stream.process(file.text, (error, result) =>
-          error ? reject(error) : resolve(result.value),
-        ),
-      )
-    }
-  })
+      nitroConfig.imports.imports.push({
+        name: 'useNuxtContentBodyHtml',
+        from: resolver.resolve('./composable.js'),
+      });
+    });
+    addServerPlugin(resolver.resolve('./server-plugin.js'))
+  }
 }
