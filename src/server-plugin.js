@@ -6,7 +6,6 @@ import {
   useNuxtContentBodyHtml,
   useRuntimeConfig,
 } from '#imports'
-// import { useNuxtContentBodyHtml } from '#content-body-html'
 
 const nuxtContentBodyHtml = useNuxtContentBodyHtml()
 

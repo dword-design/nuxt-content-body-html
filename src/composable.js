@@ -1,27 +1,13 @@
 import { transformContent } from '@nuxt/content/transformers'
 import defu from 'defu'
 import { toHtml } from 'hast-util-to-html'
-import { mapKeys, pick } from 'lodash-es'
+import { pick } from 'lodash-es'
 
 import { useRuntimeConfig } from '#imports'
 
-const runtimeConfig = useRuntimeConfig()
+import revertCompilerChanges from './revert-compiler-changes.js'
 
-const revertBodyChanges = element => ({
-  ...mapKeys(element, (value, key) => {
-    switch (key) {
-      case 'tag':
-        return 'tagName'
-      case 'props':
-        return 'properties'
-      default:
-        return key
-    }
-  }),
-  ...(element.children && {
-    children: element.children.map(child => revertBodyChanges(child)),
-  }),
-})
+const runtimeConfig = useRuntimeConfig()
 
 export const useNuxtContentBodyHtml = () => ({
   generate: async (file, options = {}) => {
@@ -34,7 +20,7 @@ export const useNuxtContentBodyHtml = () => ({
     )
 
     return toHtml(
-      revertBodyChanges(
+      revertCompilerChanges(
         (await transformContent(file._id, file.body, options)).body,
       ),
     )

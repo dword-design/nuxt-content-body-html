@@ -67,9 +67,118 @@ $ yarn add nuxt-content-body-html
 
 Sometimes you need the raw HTML code of `@nuxt/content` documents for processing. A frequent use case is to generate an RSS feed and to add the HTML as `content:encoded`. The module will use the default remark and rehype plugins. You can also add additional plugins.
 
-## Usage
+## Nuxt 3
 
-Add the module to your `nuxt.config.js` file **before** `@nuxt/content`:
+Add the module to your `nuxt.config.js` file:
+
+```js
+export default {
+  modules: [
+    '@nuxt/content',
+    'nuxt-content-body-html',
+  },
+}
+```
+
+To generate the HTML, you have two options: 1. Add fields to the module config and 2. use the `useNuxtContentBodyHtml` composable. If you just need a simple HTML version of your markdown content, the module config is fine. But if you want to add extra remark or rehype plugins involving functions, you will need to use the composable because Nuxt won't be able to serialize it into the runtime config.
+
+### Module config
+
+```js
+export default {
+  modules: [
+    '@nuxt/content',
+    ['nuxt-content-body-html', {
+      fields: {
+        bodyHtml: {},
+      },
+    }],
+  },
+}
+```
+
+This is the simplest way of generating the `bodyHtml` field into the file objects.
+
+### Composable
+
+Add a Nitro plugin to `server/plugins`. We will hook into `content:file:beforeParse` and add our HTML code by calling the composable. Unfortunately, there is currently an [open issue in @nuxt/content](https://github.com/nuxt/content/issues/2056) that does not persist variables added in `content:file:beforeParse`. So we will have to store them and restore them in `content:file:afterParse`. Hopefully this will be fixed soon.
+
+```js
+// server/plugins/body-html.js
+
+import { defineNitroPlugin, useNuxtContentBodyHtml } from '#imports'
+
+const nuxtContentBodyHtml = useNuxtContentBodyHtml()
+
+export default defineNitroPlugin(nitroApp => {
+  const bodyHtmls = {}
+
+  nitroApp.hooks.hook('content:file:beforeParse', async file =>
+    bodyHtmls[file._id] = await nuxtContentBodyHtml.generate(file)
+  )
+  nitroApp.hooks.hook('content:file:afterParse', file => (file.bodyHtml = bodyHtmls[file._id]))
+})
+```
+
+### Adding Remark and Rehype plugins
+
+In some cases you will want to add additional plugins to customize the HTML. E.g. in an RSS feed you want to have absolute URLs. You can add plugins to the field configs and the composable like so:
+
+```js
+export default {
+  modules: [
+    '@nuxt/content',
+    ['nuxt-content-body-html', {
+      fields: {
+        bodyHtml: {
+          remarkPlugins: {
+            'remark-foo': {},
+          },
+          rehypePlugins: {
+            'rehype-foo: {},
+          },
+        },
+      },
+    }],
+  },
+}
+```
+
+```js
+await useNuxtContentBodyHtml.generate(file, {
+  remarkPlugins: {
+    'remark-foo': {},
+  },
+  rehypePlugins: {
+    'rehype-foo: {},
+  },
+})
+```
+
+### Enabling the highlighter
+
+You can easily enable syntax highlighting like so:
+
+```js
+export default {
+  modules: [
+    '@nuxt/content',
+    ['nuxt-content-body-html', {
+      fields: {
+        bodyHtml: { highlight: true },
+      },
+    }],
+  },
+}
+```
+
+```js
+await useNuxtContentBodyHtml.generate(file, { highlight: true })
+```
+
+## Nuxt 2 and @nuxt/content@^1
+
+`nuxt-content-body-html` works similarly for Nuxt 2 with some minor differences. Firstly, you need to add the module to your `nuxt.config.js` file **before** `@nuxt/content`:
 
 ```js
 export default {
@@ -80,46 +189,50 @@ export default {
 }
 ```
 
-This will add a `doc.bodyHtml` property to all documents with the rendered body HTML code.
+Then, the HTML code will be generated in module context and not in Nitro context, so you can completely configure your fields via the module config and you do not need a composable.
 
-It is also possible specifiy the name of the property like so:
+For convenience, if you do not configure any field, a `bodyHtml` field will be configured by default. So the above config will already generate a field.
 
-```js
-export default {
-  modules: [
-    ['nuxt-content-body-html', { fieldName: 'html' }],
-    '@nuxt/content',
-  ],
-}
-```
-
-Then you can access it via `doc.bodyHtml`.
-
-## Adding more remark and rehype plugins
-
-It is possible to add additional plugins via the module config like so:
+To add fields or have a different name for the field, you can add fields like so:
 
 ```js
 export default {
   modules: [
     ['nuxt-content-body-html', {
-      remarkPlugins: [
-        'plugin1',
-        ['plugin2', { /* options */ }],
-      ],
-      rehypePlugins: [
-        'plugin1',
-        ['plugin2', { /* options */ }],
-      ],
+      fooHtml: {},
     }],
     '@nuxt/content',
   ],
 }
 ```
 
-## Overriding or disabling the highlighter
+### Plugins
 
-You can explicitly override or disable the highlighter by passing it as as an option:
+You can also add plugins to the config. Note that the plugins are arrays:
+
+```js
+export default {
+  modules: [
+    ['nuxt-content-body-html', {
+      fooHtml: {
+        remarkPlugins: [
+          'plugin1',
+          ['plugin2', { /* options */ }],
+        ],
+        rehypePlugins: [
+          'plugin1',
+          ['plugin2', { /* options */ }],
+        ],
+      },
+    }],
+    '@nuxt/content',
+  ],
+}
+```
+
+### Overriding or disabling the highlighter
+
+In `@nuxt/content^1` the highlighter is enabled by default. You can explicitly override or disable the highlighter by setting it in the config:
 
 ```js
 export default {
@@ -128,8 +241,8 @@ export default {
       // Pass a custom highlighter
       highlighter: customHighlighter,
 
-      // Disable the highlighter
-      highlighter: undefined,
+      // Disable the highlighter by setting a noop function
+      highlighter: code => `<pre><code class="language-js">${code}</code></pre>`,
     }],
     '@nuxt/content',
   ],
@@ -140,22 +253,44 @@ export default {
 
 You can customize the module so that you can use the resulting HTML code for RSS feeds.
 
-Firstly, RSS feeds require URLs to be absolute. You can use [rehype-urls](https://github.com/brechtcs/rehype-urls) to make relative URLs absolute. Also, you want to disable the highlighter, so that the code tags are remained.
+Firstly, RSS feeds require URLs to be absolute. You can use [rehype-urls](https://github.com/brechtcs/rehype-urls) to make relative URLs absolute. At the time of writing, the npm version is not compatible with `@nuxt/content@^2`, you will need to fix the issue in [this PR](https://github.com/brechtcs/rehype-urls/pull/3).
 
 ```js
+// nuxt.config.js
+
 // Set process.env.BASE_URL to the domain to prepend
 
 export default {
+  runtimeConfig: {
+    baseUrl: process.env.BASE_URL,
+  },
   modules: [
-    ['nuxt-content-body-html', {
-      highlighter: undefined,
-      rehypePlugins: [
-        ['rehype-urls', url => (url.host ? url : new URL(url.href, process.env.BASE_URL))],
-      ],
-    }],
     '@nuxt/content',
+    'nuxt-content-body-html',
   ],
 }
+```
+
+```js
+// server/plugins/body-html.js
+
+import { defineNitroPlugin, useNuxtContentBodyHtml, useRuntimeConfig } from '#imports'
+
+const { baseUrl } = useRuntimeConfig()
+const nuxtContentBodyHtml = useNuxtContentBodyHtml()
+
+export default defineNitroPlugin(nitroApp => {
+  const bodyHtmls = {}
+
+  nitroApp.hooks.hook('content:file:beforeParse', async file =>
+    bodyHtmls[file._id] = await nuxtContentBodyHtml.generate(file, {
+      rehypePlugins: {
+        'rehype-urls', { transform: url => (url.host ? url : new URL(url.href, baseUrl)) },
+      },
+    })
+  )
+  nitroApp.hooks.hook('content:file:afterParse', file => (file.bodyHtml = bodyHtmls[file._id]))
+})
 ```
 
 <!-- LICENSE/ -->

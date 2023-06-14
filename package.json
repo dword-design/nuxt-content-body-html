@@ -32,22 +32,16 @@
     "test": "base test"
   },
   "dependencies": {
-    "@dword-design/functions": "^5.0.20",
     "@nuxt/kit": "^3.5.3",
     "defu": "^6.1.2",
     "hast-util-to-html": "^8.0.4",
-    "jiti": "^1.16.1",
     "lodash-es": "^4.17.21",
-    "p-map-values": "^1.0.0",
     "p-props": "^5.0.0",
-    "rehype-stringify": "^9.0.3",
-    "rehype-url-inspector": "^2.0.2",
-    "remark-parse": "^10.0.1",
-    "remark-rehype": "^10.1.0",
-    "unified": "^10.1.2"
+    "resolve-cwd": "^3.0.0"
   },
   "devDependencies": {
     "@dword-design/base": "^10.0.3",
+    "@dword-design/functions": "^5.0.20",
     "@dword-design/tester": "^2.0.7",
     "@dword-design/tester-plugin-tmp-dir": "^2.1.2",
     "@nuxt/content": "^2.6.0",
@@ -60,7 +54,6 @@
     "ora": "^6.3.1",
     "output-files": "^2.0.28",
     "rehype-urls": "npm:@dword-design/rehype-urls",
-    "rehype-wrap": "^1.1.0",
     "tree-kill-promise": "^3.0.14"
   },
   "peerDependencies": {

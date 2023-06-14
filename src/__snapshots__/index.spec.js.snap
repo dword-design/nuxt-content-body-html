@@ -2,7 +2,7 @@
 
 exports[`index highlight 1`] = `
 "<code code=\\"export default () => {}
-\\" language=\\"js\\"><pre><code __ignoreMap=\\"\\"><span class=\\"line\\" line=\\"1\\"><span class=\\"ct-f41e82\\">export</span><span class=\\"ct-6cb984\\"> </span><span class=\\"ct-f41e82\\">default</span><span class=\\"ct-6cb984\\"> () </span><span class=\\"ct-5a4ed1\\">=></span><span class=\\"ct-6cb984\\"> {}</span></span></code></pre></code><style>.ct-5a4ed1{color:#569CD6}
-.ct-6cb984{color:#D4D4D4}
-.ct-f41e82{color:#C586C0}</style>"
+\\" language=\\"js\\"><pre><code __ignoreMap=\\"\\"><span class=\\"line\\" line=\\"1\\"><span class=\\"ct-123456\\">export</span><span class=\\"ct-123456\\"> </span><span class=\\"ct-123456\\">default</span><span class=\\"ct-123456\\"> () </span><span class=\\"ct-123456\\">=></span><span class=\\"ct-123456\\"> {}</span></span></code></pre></code><style>.ct-123456{color:#569CD6}
+.ct-123456{color:#D4D4D4}
+.ct-123456{color:#C586C0}</style>"
 `;
