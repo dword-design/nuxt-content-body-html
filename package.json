@@ -57,7 +57,7 @@
     "tree-kill-promise": "^3.0.14"
   },
   "peerDependencies": {
-    "@nuxt/content": "^1.14.0"
+    "@nuxt/content": "^2.0.0"
   },
   "engines": {
     "node": ">=16"
