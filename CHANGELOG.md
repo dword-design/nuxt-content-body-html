@@ -1,3 +1,25 @@
+# [3.0.0](https://github.com/dword-design/nuxt-content-body-html/compare/v2.0.17...v3.0.0) (2023-06-14)
+
+
+### Bug Fixes
+
+* foo ([c5a2244](https://github.com/dword-design/nuxt-content-body-html/commit/c5a2244153c1a9e6c2dc98e54272e0fcbb562ea4))
+* trigger release ([94d111c](https://github.com/dword-design/nuxt-content-body-html/commit/94d111ce772e3f0603cc1c00859e51c23f3531f1))
+* trigger release ([8ba25b5](https://github.com/dword-design/nuxt-content-body-html/commit/8ba25b5eb6981aa399959864b9c7722fda66b4d5))
+* trigger release ([381ed41](https://github.com/dword-design/nuxt-content-body-html/commit/381ed4150e58b09d82ede18d47beda4043359443))
+
+
+### Features
+
+* nuxt 3 support ([#89](https://github.com/dword-design/nuxt-content-body-html/issues/89)) ([b8d05a0](https://github.com/dword-design/nuxt-content-body-html/commit/b8d05a04834db87a47ad898ac763f8c5591f8f3a))
+
+
+### BREAKING CHANGES
+
+* drop node 14 support
+* different field config format (see readme)
+* highlighter: undefined doesn't work anymore, instead set the highlighter to a function (see readme)
+
 ## [2.0.17](https://github.com/dword-design/nuxt-content-body-html/compare/v2.0.16...v2.0.17) (2023-05-13)
 
 
