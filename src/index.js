@@ -21,11 +21,7 @@ export default function (options, nuxt) {
     isNuxt3 = false
   }
   nuxt = nuxt || this
-  options = defu(
-    options,
-    nuxt.options.nuxtContentBodyHtml,
-    { fields: {} },
-  )
+  options = defu(options, nuxt.options.nuxtContentBodyHtml, { fields: {} })
   if (!isNuxt3 && Object.keys(options.fields).length === 0) {
     options.fields.bodyHtml = {}
   }
