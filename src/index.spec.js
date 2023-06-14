@@ -86,8 +86,8 @@ export default tester(
             |> first
             |> property('bodyHtml'),
         ).toEqual(endent`
-          <code code="export default () => {}
-          " language="js"><pre><code __ignoreMap="">export default () => {}
+          <code class="language-js" code="export default () => {}
+          " language="js" meta=""><pre><code __ignoreMap="">export default () => {}
           </code></pre></code>
         `)
       } finally {
