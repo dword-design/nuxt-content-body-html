@@ -23,6 +23,10 @@ const revertCompilerChanges = element => {
     delete result.properties.to
   } else if (result.tagName === 'code-inline') {
     result.tagName = 'code'
+  } else if (result.tagName === 'code') {
+    if (result.children[0]?.tagName === 'pre') {
+      return result.children[0]
+    }
   }
 
   return result

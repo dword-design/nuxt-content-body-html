@@ -13,6 +13,42 @@ import kill from 'tree-kill-promise'
 
 export default tester(
   {
+    code: async () => {
+      await outputFiles({
+        'content/home.md': endent`
+          \`\`\`js
+          export default () => {}
+          \`\`\`
+        `,
+        'nuxt.config.js': endent`
+          export default {
+            modules: [
+              '${packageName`@nuxt/content`}',
+              ['self', { fields: { bodyHtml: {} } }],
+            ],
+          }
+        `,
+      })
+
+      const nuxt = execaCommand('nuxt dev', {
+        env: { NODE_ENV: 'development' },
+      })
+      try {
+        await nuxtDevReady()
+        expect(
+          axios.get('http://localhost:3000/api/_content/query?_path=/home')
+            |> await
+            |> property('data')
+            |> first
+            |> property('bodyHtml'),
+        ).toEqual(endent`
+          <pre><code __ignoreMap="">export default () => {}
+          </code></pre>
+        `)
+      } finally {
+        await kill(nuxt.pid)
+      }
+    },
     composable: async () => {
       await outputFiles({
         'content/home.md': '<a href="/bar">Link</a>',
@@ -45,7 +81,9 @@ export default tester(
         `,
       })
 
-      const nuxt = execaCommand('nuxt dev')
+      const nuxt = execaCommand('nuxt dev', {
+        env: { NODE_ENV: 'development' },
+      })
       try {
         await nuxtDevReady()
         expect(
@@ -76,7 +114,9 @@ export default tester(
         `,
       })
 
-      const nuxt = execaCommand('nuxt dev')
+      const nuxt = execaCommand('nuxt dev', {
+        env: { NODE_ENV: 'development' },
+      })
       try {
         await nuxtDevReady()
         expect(
@@ -86,9 +126,8 @@ export default tester(
             |> first
             |> property('bodyHtml'),
         ).toEqual(endent`
-          <code class="language-js" code="export default () => {}
-          " language="js" meta=""><pre><code __ignoreMap="">export default () => {}
-          </code></pre></code>
+          <pre><code __ignoreMap="">export default () => {}
+          </code></pre>
         `)
       } finally {
         await kill(nuxt.pid)
@@ -111,7 +150,9 @@ export default tester(
         `,
       })
 
-      const nuxt = execaCommand('nuxt dev')
+      const nuxt = execaCommand('nuxt dev', {
+        env: { NODE_ENV: 'development' },
+      })
       try {
         await nuxtDevReady()
         expect(
@@ -139,7 +180,9 @@ export default tester(
         `,
       })
 
-      const nuxt = execaCommand('nuxt dev')
+      const nuxt = execaCommand('nuxt dev', {
+        env: { NODE_ENV: 'development' },
+      })
       try {
         await nuxtDevReady()
         expect(
@@ -166,7 +209,9 @@ export default tester(
         `,
       })
 
-      const nuxt = execaCommand('nuxt dev')
+      const nuxt = execaCommand('nuxt dev', {
+        env: { NODE_ENV: 'development' },
+      })
       try {
         await nuxtDevReady()
         expect(
@@ -197,7 +242,9 @@ export default tester(
         `,
       })
 
-      const nuxt = execaCommand('nuxt dev')
+      const nuxt = execaCommand('nuxt dev', {
+        env: { NODE_ENV: 'development' },
+      })
       try {
         await nuxtDevReady()
         expect(
@@ -227,7 +274,9 @@ export default tester(
         `,
       })
 
-      const nuxt = execaCommand('nuxt dev')
+      const nuxt = execaCommand('nuxt dev', {
+        env: { NODE_ENV: 'development' },
+      })
       try {
         await nuxtDevReady()
         expect(
@@ -409,7 +458,9 @@ export default tester(
         `,
       })
 
-      const nuxt = execaCommand('nuxt dev')
+      const nuxt = execaCommand('nuxt dev', {
+        env: { NODE_ENV: 'development' },
+      })
       try {
         await nuxtDevReady()
         expect(
