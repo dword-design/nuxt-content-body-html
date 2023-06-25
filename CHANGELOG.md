@@ -1,3 +1,10 @@
+## [3.0.2](https://github.com/dword-design/nuxt-content-body-html/compare/v3.0.1...v3.0.2) (2023-06-25)
+
+
+### Bug Fixes
+
+* foo ([d590068](https://github.com/dword-design/nuxt-content-body-html/commit/d5900684f0794a23d46ff105f16d1c996a9fa028))
+
 ## [3.0.1](https://github.com/dword-design/nuxt-content-body-html/compare/v3.0.0...v3.0.1) (2023-06-25)
 
 
