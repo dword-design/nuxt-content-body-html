@@ -153,6 +153,33 @@ export default tester(
         await kill(nuxt.pid)
       }
     },
+    'inline code': async () => {
+      await outputFiles({
+        'content/home.md': 'foo `bar` baz',
+        'nuxt.config.js': endent`
+          export default {
+            modules: [
+              '${packageName`@nuxt/content`}',
+              ['self', { fields: { bodyHtml: {} } }],
+            ],
+          }
+        `,
+      })
+
+      const nuxt = execaCommand('nuxt dev')
+      try {
+        await nuxtDevReady()
+        expect(
+          axios.get('http://localhost:3000/api/_content/query?_path=/home')
+            |> await
+            |> property('data')
+            |> first
+            |> property('bodyHtml'),
+        ).toEqual('<p>foo <code>bar</code> baz</p>')
+      } finally {
+        await kill(nuxt.pid)
+      }
+    },
     'multiple fields': async () => {
       await outputFiles({
         'content/home.md': endent`

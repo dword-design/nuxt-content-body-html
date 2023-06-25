@@ -16,11 +16,13 @@ const revertCompilerChanges = element => {
       children: element.children.map(child => revertCompilerChanges(child)),
     }),
   }
-  // Only needed for Nuxt 2
   if (result.tagName === 'nuxt-link') {
+    // Only needed for Nuxt 2
     result.tagName = 'a'
     result.properties.href = result.properties.to
     delete result.properties.to
+  } else if (result.tagName === 'code-inline') {
+    result.tagName = 'code'
   }
 
   return result
