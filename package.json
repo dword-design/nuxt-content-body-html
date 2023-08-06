@@ -34,7 +34,7 @@
   "dependencies": {
     "@nuxt/kit": "^3.5.3",
     "defu": "^6.1.2",
-    "hast-util-to-html": "^8.0.4",
+    "hast-util-to-html": "^9.0.0",
     "lodash-es": "^4.17.21",
     "p-props": "^5.0.0",
     "resolve-cwd": "^3.0.0"
