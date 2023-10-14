@@ -36,7 +36,7 @@
     "defu": "^6.1.2",
     "hast-util-to-html": "^8.0.4",
     "lodash-es": "^4.17.21",
-    "p-props": "^5.0.0",
+    "p-props": "^6.0.0",
     "resolve-cwd": "^3.0.0"
   },
   "devDependencies": {
