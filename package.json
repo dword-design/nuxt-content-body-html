@@ -50,7 +50,7 @@
     "execa": "^7.1.1",
     "fs-extra": "^11.1.1",
     "nuxt": "^3.5.2",
-    "nuxt-dev-ready": "^2.0.1",
+    "nuxt-dev-ready": "^3.0.0",
     "ora": "^6.3.1",
     "output-files": "^2.0.28",
     "rehype-urls": "npm:@dword-design/rehype-urls",
