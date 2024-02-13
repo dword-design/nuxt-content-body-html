@@ -42,7 +42,8 @@ export default tester(
             |> first
             |> property('bodyHtml'),
         ).toEqual(endent`
-          <pre><code __ignoreMap="">export default () => {}
+          <pre class="language-js" code="export default () => {}
+          " language="js" meta=""><code __ignoreMap="">export default () => {}
           </code></pre>
         `)
       } finally {
@@ -107,8 +108,8 @@ export default tester(
         'nuxt.config.js': endent`
           export default {
             modules: [
-              ['${packageName`@nuxt/content`}', { highlight: true }],
-              ['self', { fields: { bodyHtml: { highlight: false } } }],
+              ['${packageName`@nuxt/content`}', { highlight: {} }],
+              ['self', { fields: { bodyHtml: { markdown: { highlight: false } } } }],
             ],
           }
         `,
@@ -116,6 +117,7 @@ export default tester(
 
       const nuxt = execaCommand('nuxt dev', {
         env: { NODE_ENV: 'development' },
+        stdio: 'inherit',
       })
       try {
         await nuxtDevReady()
@@ -220,7 +222,7 @@ export default tester(
             |> property('data')
             |> first
             |> property('bodyHtml'),
-        ).toEqual('<p>foo <code>bar</code> baz</p>')
+        ).toEqual('<p>foo <code class="">bar</code> baz</p>')
       } finally {
         await kill(nuxt.pid)
       }
@@ -479,7 +481,7 @@ export default tester(
     testerPluginTmpDir(),
     {
       before: async () => {
-        const spinner = ora('Installing Nuxt 2 and @nuxt/content 1').start()
+        const spinner = ora('Installing Nuxt 2 and @nuxt/content@^1').start()
         await fs.outputFile(
           P.join('node_modules', '.cache', 'nuxt2', 'package.json'),
           JSON.stringify({}),
@@ -494,7 +496,11 @@ export default tester(
       beforeEach: async () => {
         await fs.outputFile(
           'node_modules/self/package.json',
-          JSON.stringify({ exports: './src/index.js', name: 'self' }),
+          JSON.stringify({
+            exports: './src/index.js',
+            name: 'self',
+            type: 'module',
+          }),
         )
         await fs.copy('../src', 'node_modules/self/src')
       },
