@@ -118,9 +118,7 @@ export default tester(
         `,
       });
 
-      const nuxt = execaCommand('nuxt dev', {
-        env: { NODE_ENV: '' },
-      });
+      const nuxt = execaCommand('nuxt dev', { env: { NODE_ENV: '' } });
 
       try {
         await nuxtDevReady();
