@@ -1,15 +1,19 @@
-import { endent, first, pick, property, replace } from '@dword-design/functions'
-import tester from '@dword-design/tester'
-import testerPluginTmpDir from '@dword-design/tester-plugin-tmp-dir'
-import axios from 'axios'
-import packageName from 'depcheck-package-name'
-import { execa, execaCommand } from 'execa'
-import fs from 'fs-extra'
-import nuxtDevReady from 'nuxt-dev-ready'
-import ora from 'ora'
-import outputFiles from 'output-files'
-import P from 'path'
-import kill from 'tree-kill-promise'
+import {
+  endent,
+  first,
+  pick,
+  property,
+  replace,
+} from '@dword-design/functions';
+import tester from '@dword-design/tester';
+import testerPluginTmpDir from '@dword-design/tester-plugin-tmp-dir';
+import axios from 'axios';
+import packageName from 'depcheck-package-name';
+import { execaCommand } from 'execa';
+import fs from 'fs-extra';
+import nuxtDevReady from 'nuxt-dev-ready';
+import outputFiles from 'output-files';
+import kill from 'tree-kill-promise';
 
 export default tester(
   {
@@ -28,13 +32,13 @@ export default tester(
             ],
           }
         `,
-      })
+      });
 
-      const nuxt = execaCommand('nuxt dev', {
-        env: { NODE_ENV: 'development' },
-      })
+      const nuxt = execaCommand('nuxt dev', { env: { NODE_ENV: '' } });
+
       try {
-        await nuxtDevReady()
+        await nuxtDevReady();
+
         expect(
           axios.get('http://localhost:3000/api/_content/query?_path=/home')
             |> await
@@ -42,12 +46,11 @@ export default tester(
             |> first
             |> property('bodyHtml'),
         ).toEqual(endent`
-          <pre class="language-js" code="export default () => {}
-          " language="js" meta=""><code __ignoreMap="">export default () => {}
+          <pre><code __ignoreMap="">export default () => {}
           </code></pre>
-        `)
+        `);
       } finally {
-        await kill(nuxt.pid)
+        await kill(nuxt.pid);
       }
     },
     composable: async () => {
@@ -80,22 +83,22 @@ export default tester(
             nitroApp.hooks.hook('content:file:afterParse', file => (file.bodyHtml = bodyHtmls[file._id]))
           })
         `,
-      })
+      });
 
-      const nuxt = execaCommand('nuxt dev', {
-        env: { NODE_ENV: 'development' },
-      })
+      const nuxt = execaCommand('nuxt dev', { env: { NODE_ENV: '' } });
+
       try {
-        await nuxtDevReady()
+        await nuxtDevReady();
+
         expect(
           axios.get('http://localhost:3000/api/_content/query?_path=/home')
             |> await
             |> property('data')
             |> first
             |> property('bodyHtml'),
-        ).toEqual('<p><a href="https://foo.com/bar">Link</a></p>')
+        ).toEqual('<p><a href="https://foo.com/bar">Link</a></p>');
       } finally {
-        await kill(nuxt.pid)
+        await kill(nuxt.pid);
       }
     },
     'disable highlight after enable': async () => {
@@ -108,19 +111,20 @@ export default tester(
         'nuxt.config.js': endent`
           export default {
             modules: [
-              ['${packageName`@nuxt/content`}', { highlight: {} }],
-              ['self', { fields: { bodyHtml: { markdown: { highlight: false } } } }],
+              ['${packageName`@nuxt/content`}', { highlight: true }],
+              ['self', { fields: { bodyHtml: { highlight: false } } }],
             ],
           }
         `,
-      })
+      });
 
       const nuxt = execaCommand('nuxt dev', {
-        env: { NODE_ENV: 'development' },
-        stdio: 'inherit',
-      })
+        env: { NODE_ENV: '' },
+      });
+
       try {
-        await nuxtDevReady()
+        await nuxtDevReady();
+
         expect(
           axios.get('http://localhost:3000/api/_content/query?_path=/home')
             |> await
@@ -130,9 +134,9 @@ export default tester(
         ).toEqual(endent`
           <pre><code __ignoreMap="">export default () => {}
           </code></pre>
-        `)
+        `);
       } finally {
-        await kill(nuxt.pid)
+        await kill(nuxt.pid);
       }
     },
     async highlight() {
@@ -150,13 +154,13 @@ export default tester(
             ],
           }
         `,
-      })
+      });
 
-      const nuxt = execaCommand('nuxt dev', {
-        env: { NODE_ENV: 'development' },
-      })
+      const nuxt = execaCommand('nuxt dev', { env: { NODE_ENV: '' } });
+
       try {
-        await nuxtDevReady()
+        await nuxtDevReady();
+
         expect(
           axios.get('http://localhost:3000/api/_content/query?_path=/home')
             |> await
@@ -164,9 +168,9 @@ export default tester(
             |> first
             |> property('bodyHtml')
             |> replace(/ct-....../g, 'ct-123456'),
-        ).toMatchSnapshot(this)
+        ).toMatchSnapshot(this);
       } finally {
-        await kill(nuxt.pid)
+        await kill(nuxt.pid);
       }
     },
     iframe: async () => {
@@ -180,22 +184,22 @@ export default tester(
             ],
           }
         `,
-      })
+      });
 
-      const nuxt = execaCommand('nuxt dev', {
-        env: { NODE_ENV: 'development' },
-      })
+      const nuxt = execaCommand('nuxt dev', { env: { NODE_ENV: '' } });
+
       try {
-        await nuxtDevReady()
+        await nuxtDevReady();
+
         expect(
           axios.get('http://localhost:3000/api/_content/query?_path=/home')
             |> await
             |> property('data')
             |> first
             |> property('bodyHtml'),
-        ).toEqual('<iframe></iframe>')
+        ).toEqual('<iframe></iframe>');
       } finally {
-        await kill(nuxt.pid)
+        await kill(nuxt.pid);
       }
     },
     'inline code': async () => {
@@ -209,22 +213,22 @@ export default tester(
             ],
           }
         `,
-      })
+      });
 
-      const nuxt = execaCommand('nuxt dev', {
-        env: { NODE_ENV: 'development' },
-      })
+      const nuxt = execaCommand('nuxt dev', { env: { NODE_ENV: '' } });
+
       try {
-        await nuxtDevReady()
+        await nuxtDevReady();
+
         expect(
           axios.get('http://localhost:3000/api/_content/query?_path=/home')
             |> await
             |> property('data')
             |> first
             |> property('bodyHtml'),
-        ).toEqual('<p>foo <code class="">bar</code> baz</p>')
+        ).toEqual('<p>foo <code>bar</code> baz</p>');
       } finally {
-        await kill(nuxt.pid)
+        await kill(nuxt.pid);
       }
     },
     'multiple fields': async () => {
@@ -242,13 +246,13 @@ export default tester(
             ],
           }
         `,
-      })
+      });
 
-      const nuxt = execaCommand('nuxt dev', {
-        env: { NODE_ENV: 'development' },
-      })
+      const nuxt = execaCommand('nuxt dev', { env: { NODE_ENV: '' } });
+
       try {
-        await nuxtDevReady()
+        await nuxtDevReady();
+
         expect(
           axios.get('http://localhost:3000/api/_content/query?_path=/home')
             |> await
@@ -258,9 +262,9 @@ export default tester(
         ).toEqual({
           bar: '<h1 id="foo">Foo</h1><p>Foo bar baz</p>',
           foo: '<h1 id="foo">Foo</h1><p>Foo bar baz</p>',
-        })
+        });
       } finally {
-        await kill(nuxt.pid)
+        await kill(nuxt.pid);
       }
     },
     'non-markdown file': async () => {
@@ -274,173 +278,22 @@ export default tester(
             ],
           }
         `,
-      })
+      });
 
-      const nuxt = execaCommand('nuxt dev', {
-        env: { NODE_ENV: 'development' },
-      })
+      const nuxt = execaCommand('nuxt dev', { env: { NODE_ENV: '' } });
+
       try {
-        await nuxtDevReady()
+        await nuxtDevReady();
+
         expect(
           axios.get('http://localhost:3000/api/_content/query?_path=/home')
             |> await
             |> property('data')
             |> first
             |> property('bodyHtml'),
-        ).toBeUndefined()
+        ).toBeUndefined();
       } finally {
-        await kill(nuxt.pid)
-      }
-    },
-    nuxt2: async () => {
-      await outputFiles({
-        'content/home.md': endent`
-          # Foo
-
-          Foo bar baz
-        `,
-        'nuxt.config.js': endent`
-          export default {
-            modules: [
-              '~/../src/index.js',
-              '${packageName`@nuxt/content`}',
-            ],
-          }
-        `,
-      })
-      await fs.remove('node_modules')
-      await fs.symlink(
-        P.join('..', 'node_modules', '.cache', 'nuxt2', 'node_modules'),
-        'node_modules',
-      )
-
-      const nuxt = execa(P.join('node_modules', '.bin', 'nuxt'), ['dev'])
-      try {
-        await nuxtDevReady()
-        expect(
-          axios.get('http://localhost:3000/_content/home')
-            |> await
-            |> property('data')
-            |> property('bodyHtml'),
-        ).toEqual(endent`
-          <h1 id="foo"><a aria-hidden="true" href="#foo" tabindex="-1"><span class="icon icon-link"></span></a>Foo</h1>
-          <p>Foo bar baz</p>
-        `)
-      } finally {
-        await kill(nuxt.pid)
-      }
-    },
-    'nuxt2: code': async () => {
-      await outputFiles({
-        'content/home.md': endent`
-          \`\`\`js
-          export default () => {}
-          \`\`\`
-        `,
-        'nuxt.config.js': endent`
-          export default {
-            modules: [
-              '~/../src/index.js',
-              '${packageName`@nuxt/content`}',
-            ],
-          }
-        `,
-      })
-      await fs.remove('node_modules')
-      await fs.symlink(
-        P.join('..', 'node_modules', '.cache', 'nuxt2', 'node_modules'),
-        'node_modules',
-      )
-
-      const nuxt = execa(P.join('node_modules', '.bin', 'nuxt'), ['dev'])
-      try {
-        await nuxtDevReady()
-        expect(
-          axios.get('http://localhost:3000/_content/home')
-            |> await
-            |> property('data')
-            |> property('bodyHtml'),
-        ).toEqual(endent`
-          <div class="nuxt-content-highlight"><pre class="language-js line-numbers"><code><span class="token keyword module">export</span> <span class="token keyword module">default</span> <span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token arrow operator">=></span> <span class="token punctuation">{</span><span class="token punctuation">}</span>
-          </code></pre></div>
-        `)
-      } finally {
-        await kill(nuxt.pid)
-      }
-    },
-    'nuxt2: disable highlighter': async () => {
-      await outputFiles({
-        'content/home.md': endent`
-          \`\`\`js
-          export default () => {}
-          \`\`\`
-        `,
-        'nuxt.config.js': endent`
-          export default {
-            modules: [
-              ['~/../src/index.js', {
-                fields: {
-                  bodyHtml: { highlighter: code => \`<pre><code class="language-js">\${code}</code></pre>\` },
-                },
-              }],
-              '${packageName`@nuxt/content`}',
-            ],
-          }
-        `,
-      })
-      await fs.remove('node_modules')
-      await fs.symlink(
-        P.join('..', 'node_modules', '.cache', 'nuxt2', 'node_modules'),
-        'node_modules',
-      )
-
-      const nuxt = execa(P.join('node_modules', '.bin', 'nuxt'), ['dev'])
-      try {
-        await nuxtDevReady()
-        expect(
-          axios.get('http://localhost:3000/_content/home')
-            |> await
-            |> property('data')
-            |> property('bodyHtml'),
-        ).toEqual(endent`
-          <div class="nuxt-content-highlight"><pre><code class="language-js">export default () => {}
-          </code></pre></div>
-        `)
-      } finally {
-        await kill(nuxt.pid)
-      }
-    },
-    'nuxt2: relative link': async () => {
-      await outputFiles({
-        'content/home.md': endent`
-          [relative link](/foo)
-        `,
-        'nuxt.config.js': endent`
-          export default {
-            modules: [
-              '~/../src/index.js',
-              '${packageName`@nuxt/content`}',
-            ],
-          }
-        `,
-      })
-      await fs.remove('node_modules')
-      await fs.symlink(
-        P.join('..', 'node_modules', '.cache', 'nuxt2', 'node_modules'),
-        'node_modules',
-      )
-
-      const nuxt = execa(P.join('node_modules', '.bin', 'nuxt'), ['dev'])
-      try {
-        await nuxtDevReady()
-        expect(
-          axios.get('http://localhost:3000/_content/home')
-            |> await
-            |> property('data')
-            |> property('bodyHtml'),
-        ).toEqual('<p><a href="/foo">relative link</a></p>')
-      } finally {
-        await kill(nuxt.pid)
+        await kill(nuxt.pid);
       }
     },
     works: async () => {
@@ -458,40 +311,27 @@ export default tester(
             ],
           }
         `,
-      })
+      });
 
-      const nuxt = execaCommand('nuxt dev', {
-        env: { NODE_ENV: 'development' },
-      })
+      const nuxt = execaCommand('nuxt dev', { env: { NODE_ENV: '' } });
+
       try {
-        await nuxtDevReady()
+        await nuxtDevReady();
+
         expect(
           axios.get('http://localhost:3000/api/_content/query?_path=/home')
             |> await
             |> property('data')
             |> first
             |> property('bodyHtml'),
-        ).toEqual('<h1 id="foo">Foo</h1><p>Foo bar baz</p>')
+        ).toEqual('<h1 id="foo">Foo</h1><p>Foo bar baz</p>');
       } finally {
-        await kill(nuxt.pid)
+        await kill(nuxt.pid);
       }
     },
   },
   [
     testerPluginTmpDir(),
-    {
-      before: async () => {
-        const spinner = ora('Installing Nuxt 2 and @nuxt/content@^1').start()
-        await fs.outputFile(
-          P.join('node_modules', '.cache', 'nuxt2', 'package.json'),
-          JSON.stringify({}),
-        )
-        await execaCommand('yarn add nuxt@^2 @nuxt/content@^1', {
-          cwd: P.join('node_modules', '.cache', 'nuxt2'),
-        })
-        spinner.stop()
-      },
-    },
     {
       beforeEach: async () => {
         await fs.outputFile(
@@ -501,9 +341,10 @@ export default tester(
             name: 'self',
             type: 'module',
           }),
-        )
-        await fs.copy('../src', 'node_modules/self/src')
+        );
+
+        await fs.copy('../src', 'node_modules/self/src');
       },
     },
   ],
-)
+);
