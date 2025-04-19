@@ -36,11 +36,10 @@
     "defu": "^6.1.2",
     "hast-util-to-html": "^8.0.4",
     "lodash-es": "^4.17.21",
-    "p-props": "^5.0.0",
-    "resolve-cwd": "^3.0.0"
+    "p-props": "^5.0.0"
   },
   "devDependencies": {
-    "@dword-design/base": "^10.0.3",
+    "@dword-design/base": "^11.2.10",
     "@dword-design/functions": "^5.0.20",
     "@dword-design/tester": "^2.0.7",
     "@dword-design/tester-plugin-tmp-dir": "^2.1.2",
@@ -51,7 +50,6 @@
     "fs-extra": "^11.1.1",
     "nuxt": "^3.5.2",
     "nuxt-dev-ready": "^2.0.1",
-    "ora": "^6.3.1",
     "output-files": "^2.0.28",
     "rehype-urls": "npm:@dword-design/rehype-urls",
     "tree-kill-promise": "^3.0.14"
@@ -59,8 +57,9 @@
   "peerDependencies": {
     "@nuxt/content": "^1.14.0"
   },
+  "packageManager": "pnpm@10.8.1+sha512.c50088ba998c67b8ca8c99df8a5e02fd2ae2e2b29aaf238feaa9e124248d3f48f9fb6db2424949ff901cffbb5e0f0cc1ad6aedb602cd29450751d11c35023677",
   "engines": {
-    "node": ">=16"
+    "node": ">=18"
   },
   "publishConfig": {
     "access": "public"

@@ -1,34 +1,36 @@
-import { mapValues } from 'lodash-es'
-import pProps from 'p-props'
+import { mapValues } from 'lodash-es';
+import pProps from 'p-props';
 
 import {
   defineNitroPlugin,
   useNuxtContentBodyHtml,
   useRuntimeConfig,
-} from '#imports'
+} from '#imports';
 
-const nuxtContentBodyHtml = useNuxtContentBodyHtml()
-
-const runtimeConfig = useRuntimeConfig()
-
-const options = runtimeConfig.nuxtContentBodyHtml
+const nuxtContentBodyHtml = useNuxtContentBodyHtml();
+const runtimeConfig = useRuntimeConfig();
+const options = runtimeConfig.nuxtContentBodyHtml;
 
 export default defineNitroPlugin(nitroApp => {
-  const bodyHtmls = {}
+  const bodyHtmls = {};
+
   nitroApp.hooks.hook('content:file:beforeParse', async file => {
     if (!file._id.endsWith('.md')) {
-      return
+      return;
     }
+
     bodyHtmls[file._id] = await pProps(
       mapValues(options.fields, fieldConfig =>
         nuxtContentBodyHtml.generate(file, fieldConfig),
       ),
-    )
-  })
+    );
+  });
+
   nitroApp.hooks.hook('content:file:afterParse', file => {
     if (!file._id.endsWith('.md')) {
-      return
+      return;
     }
-    Object.assign(file, bodyHtmls[file._id])
-  })
-})
+
+    Object.assign(file, bodyHtmls[file._id]);
+  });
+});

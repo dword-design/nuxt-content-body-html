@@ -2,7 +2,6 @@
   "editor.tabSize": 2,
   "files.autoSave": "off",
   "files.exclude": {
-    ".babelrc.json": true,
     ".commitlintrc.json": true,
     ".cz.json": true,
     ".devcontainer": true,
@@ -14,16 +13,18 @@
     ".gitpod.Dockerfile": true,
     ".gitpod.yml": true,
     ".husky": true,
+    ".npmrc": true,
     ".nyc_output": true,
     ".releaserc.json": true,
     ".renovaterc.json": true,
     ".vscode": true,
     "CHANGELOG.md": true,
     "LICENSE.md": true,
+    "babel.config.json": true,
     "coverage": true,
     "dist": true,
     "node_modules": true,
-    "yarn.lock": true
+    "pnpm-lock.yaml": true
   },
   "workbench.editor.enablePreview": false
 }
