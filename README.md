@@ -53,6 +53,8 @@
 Adds a property to each @nuxt/content document containing the raw HTML body, rendered from markdown.
 <!-- /DESCRIPTION -->
 
+Sometimes you need the raw HTML code of `@nuxt/content` documents for processing. A frequent use case is to generate an RSS feed and to add the HTML as `content:encoded`. The module will use the default remark and rehype plugins. You can also add additional plugins.
+
 <!-- INSTALL/ -->
 ## Install
 
@@ -65,9 +67,7 @@ $ yarn add nuxt-content-body-html
 ```
 <!-- /INSTALL -->
 
-Sometimes you need the raw HTML code of `@nuxt/content` documents for processing. A frequent use case is to generate an RSS feed and to add the HTML as `content:encoded`. The module will use the default remark and rehype plugins. You can also add additional plugins.
-
-## Nuxt 3
+## Usage
 
 Add the module to your `nuxt.config.js` file:
 
@@ -80,7 +80,12 @@ export default {
 }
 ```
 
-To generate the HTML, you have two options: 1. Add fields to the module config and 2. use the `useNuxtContentBodyHtml` composable. If you just need a simple HTML version of your markdown content, the module config is fine. But if you want to add extra remark or rehype plugins involving functions, you will need to use the composable because Nuxt won't be able to serialize it into the runtime config.
+To generate the HTML, you have two options:
+
+1. Add fields to the module config.
+2. Use the `useNuxtContentBodyHtml` composable.
+
+If you just need a simple HTML version of your markdown content, the module config is fine. If you want to generate the HTML somewhere else, you can use the composable.
 
 ### Module config
 
@@ -97,28 +102,25 @@ export default {
 }
 ```
 
-This is the simplest way of generating the `bodyHtml` field into the file objects.
-
-### Composable
-
-Add a Nitro plugin to `server/plugins`. We will hook into `content:file:beforeParse` and add our HTML code by calling the composable. Unfortunately, there is currently an [open issue in @nuxt/content](https://github.com/nuxt/content/issues/2056) that does not persist variables added in `content:file:beforeParse`. So we will have to store them and restore them in `content:file:afterParse`. Hopefully this will be fixed soon.
+Then add the field to your content config:
 
 ```js
-// server/plugins/body-html.js
+// content.config.js
 
-import { defineNitroPlugin, useNuxtContentBodyHtml } from '#imports'
+import { defineContentConfig, defineCollection, z } from '@nuxt/content';
 
-const nuxtContentBodyHtml = useNuxtContentBodyHtml()
-
-export default defineNitroPlugin(nitroApp => {
-  const bodyHtmls = {}
-
-  nitroApp.hooks.hook('content:file:beforeParse', async file =>
-    bodyHtmls[file._id] = await nuxtContentBodyHtml.generate(file)
-  )
-  nitroApp.hooks.hook('content:file:afterParse', file => (file.bodyHtml = bodyHtmls[file._id]))
-})
+export default defineContentConfig({
+  collections: {
+    content: defineCollection({
+      source: '**',
+      type: 'page',
+      schema: z.object({ bodyHtml: z.string() }),
+    }),
+  },
+});
 ```
+
+This is the simplest way of generating the `bodyHtml` field into the file objects.
 
 ### Adding Remark and Rehype plugins
 
@@ -144,20 +146,9 @@ export default {
 }
 ```
 
-```js
-await useNuxtContentBodyHtml.generate(file, {
-  remarkPlugins: {
-    'remark-foo': {},
-  },
-  rehypePlugins: {
-    'rehype-foo: {},
-  },
-})
-```
+### Disabling the highlighter
 
-### Enabling the highlighter
-
-You can easily enable syntax highlighting like so:
+You can disable syntax highlighting like so:
 
 ```js
 export default {
@@ -165,88 +156,24 @@ export default {
     '@nuxt/content',
     ['nuxt-content-body-html', {
       fields: {
-        bodyHtml: { highlight: true },
+        bodyHtml: { highlight: false },
       },
     }],
   },
 }
 ```
 
-```js
-await useNuxtContentBodyHtml.generate(file, { highlight: true })
-```
-
-## Nuxt 2 and @nuxt/content@^1
-
-`nuxt-content-body-html` works similarly for Nuxt 2 with some minor differences. Firstly, you need to add the module to your `nuxt.config.js` file **before** `@nuxt/content`:
+### Composable
 
 ```js
-export default {
-  modules: [
-    'nuxt-content-body-html',
-    '@nuxt/content',
-  },
-}
-```
+// server/api/stuff.get.js
 
-Then, the HTML code will be generated in module context and not in Nitro context, so you can completely configure your fields via the module config and you do not need a composable.
+const nuxtContentBodyHtml = useNuxtContentBodyHtml();
 
-For convenience, if you do not configure any field, a `bodyHtml` field will be configured by default. So the above config will already generate a field.
-
-To add fields or have a different name for the field, you can add fields like so:
-
-```js
-export default {
-  modules: [
-    ['nuxt-content-body-html', {
-      fooHtml: {},
-    }],
-    '@nuxt/content',
-  ],
-}
-```
-
-### Plugins
-
-You can also add plugins to the config. Note that the plugins are arrays:
-
-```js
-export default {
-  modules: [
-    ['nuxt-content-body-html', {
-      fooHtml: {
-        remarkPlugins: [
-          'plugin1',
-          ['plugin2', { /* options */ }],
-        ],
-        rehypePlugins: [
-          'plugin1',
-          ['plugin2', { /* options */ }],
-        ],
-      },
-    }],
-    '@nuxt/content',
-  ],
-}
-```
-
-### Overriding or disabling the highlighter
-
-In `@nuxt/content^1` the highlighter is enabled by default. You can explicitly override or disable the highlighter by setting it in the config:
-
-```js
-export default {
-  modules: [
-    ['nuxt-content-body-html', {
-      // Pass a custom highlighter
-      highlighter: customHighlighter,
-
-      // Disable the highlighter by setting a noop function
-      highlighter: code => `<pre><code class="language-js">${code}</code></pre>`,
-    }],
-    '@nuxt/content',
-  ],
-}
+export default defineEventHandler(event => {
+  const file = await queryCollection(event, 'content').first();
+  return nuxtContentBodyHtml.generate(file, { /* Same options as field config */ });
+});
 ```
 
 ## Usage for RSS feeds
@@ -260,37 +187,20 @@ Firstly, RSS feeds require URLs to be absolute. You can use [rehype-urls](https:
 
 // Set process.env.BASE_URL to the domain to prepend
 
-export default {
-  runtimeConfig: {
-    baseUrl: process.env.BASE_URL,
-  },
+export default defineNuxtConfig({
   modules: [
     '@nuxt/content',
-    'nuxt-content-body-html',
-  ],
-}
-```
-
-```js
-// server/plugins/body-html.js
-
-import { defineNitroPlugin, useNuxtContentBodyHtml, useRuntimeConfig } from '#imports'
-
-const { baseUrl } = useRuntimeConfig()
-const nuxtContentBodyHtml = useNuxtContentBodyHtml()
-
-export default defineNitroPlugin(nitroApp => {
-  const bodyHtmls = {}
-
-  nitroApp.hooks.hook('content:file:beforeParse', async file =>
-    bodyHtmls[file._id] = await nuxtContentBodyHtml.generate(file, {
-      rehypePlugins: {
-        'rehype-urls', { transform: url => (url.host ? url : new URL(url.href, baseUrl)) },
+    ['nuxt-content-body-html', {
+      fields: {
+        bodyHtml: {
+          rehypePlugins: {
+            'rehype-urls': { options: url => (url.host ? url : new URL(url.href, process.env.BASE_URL)) },
+          },
+        },
       },
-    })
-  )
-  nitroApp.hooks.hook('content:file:afterParse', file => (file.bodyHtml = bodyHtmls[file._id]))
-})
+    }]
+  ]
+});
 ```
 
 <!-- LICENSE/ -->
