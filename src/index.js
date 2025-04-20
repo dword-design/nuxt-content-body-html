@@ -1,4 +1,4 @@
-import { createResolver } from '@nuxt/kit';
+import { addServerImports, createResolver } from '@nuxt/kit';
 import defu from 'defu';
 import { mapValues } from 'lodash-es';
 import pProps from 'p-props';
@@ -10,16 +10,12 @@ const resolver = createResolver(import.meta.url);
 export default (options, nuxt) => {
   options = defu(options, nuxt.options.nuxtContentBodyHtml, { fields: {} });
 
-  nuxt.hook('nitro:config', nitroConfig => {
-    if (!nitroConfig.imports) {
-      nitroConfig.imports = { imports: [] };
-    }
-
-    nitroConfig.imports.imports.push({
+  addServerImports([
+    {
       from: resolver.resolve('./composable.js'),
       name: 'useNuxtContentBodyHtml',
-    });
-  });
+    },
+  ]);
 
   if (Object.keys(options.fields).length > 0) {
     let markdownOptions;
