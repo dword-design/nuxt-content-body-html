@@ -10,7 +10,7 @@
   "eslintConfig": {
     "extends": "@dword-design/eslint-config",
     "rules": {
-      "import/no-unresolved": ["error", { "ignore": ["#imports"] }]
+      "import/no-unresolved": ["error", { "ignore": ["#imports", "#mdc-imports"] }]
     }
   }
 }

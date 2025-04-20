@@ -1,10 +1,4 @@
-import {
-  endent,
-  first,
-  pick,
-  property,
-  replace,
-} from '@dword-design/functions';
+import { endent, property, replace } from '@dword-design/functions';
 import tester from '@dword-design/tester';
 import testerPluginTmpDir from '@dword-design/tester-plugin-tmp-dir';
 import axios from 'axios';
@@ -17,8 +11,21 @@ import kill from 'tree-kill-promise';
 
 export default tester(
   {
-    code: async () => {
+    async code() {
       await outputFiles({
+        'content.config.js': endent`
+          import { defineContentConfig, defineCollection, z } from '@nuxt/content';
+
+          export default defineContentConfig({
+            collections: {
+              content: defineCollection({
+                source: '**',
+                type: 'page',
+                schema: z.object({ bodyHtml: z.string() }),
+              }),
+            },
+          });
+        `,
         'content/home.md': endent`
           \`\`\`js
           export default () => {}
@@ -30,32 +37,51 @@ export default tester(
               '${packageName`@nuxt/content`}',
               ['self', { fields: { bodyHtml: {} } }],
             ],
-          }
+            content: { build: { markdown: { highlight: false } } },
+          };
+        `,
+        'server/api/content.get.js': endent`
+          import { defineEventHandler, queryCollection } from '#imports';
+
+          export default defineEventHandler(event => queryCollection(event, 'content').select('bodyHtml').first());
         `,
       });
 
-      const nuxt = execaCommand('nuxt dev', { env: { NODE_ENV: '' } });
+      const nuxt = execaCommand('nuxt dev', {
+        env: { NODE_ENV: '' },
+        stderr: 'inherit',
+      });
 
       try {
         await nuxtDevReady();
 
         expect(
-          axios.get('http://localhost:3000/api/_content/query?_path=/home')
+          axios.get('http://localhost:3000/api/content')
             |> await
-            |> property('data')
-            |> first
-            |> property('bodyHtml'),
-        ).toEqual(endent`
-          <pre><code __ignoreMap="">export default () => {}
-          </code></pre>
-        `);
+            |> property('data.bodyHtml'),
+        ).toMatchSnapshot(this);
       } finally {
         await kill(nuxt.pid);
       }
     },
     composable: async () => {
       await outputFiles({
-        'content/home.md': '<a href="/bar">Link</a>',
+        'content.config.js': endent`
+          import { defineContentConfig, defineCollection, z } from '@nuxt/content';
+
+          export default defineContentConfig({
+            collections: {
+              content: defineCollection({
+                source: '**',
+                type: 'page',
+                schema: z.object({
+                  rawbody: z.string(),
+                }),
+              }),
+            },
+          });
+        `,
+        'content/home.md': '[Link](/bar)',
         'nuxt.config.js': endent`
           export default {
             modules: [
@@ -64,45 +90,56 @@ export default tester(
             ],
           }
         `,
-        'server/plugins/body-html.js': endent`
-          import { defineNitroPlugin, useNuxtContentBodyHtml } from '#imports'
-          import { URL } from 'url'
+        'server/api/content.get.js': endent`
+          import { URL } from 'url';
 
-          const nuxtContentBodyHtml = useNuxtContentBodyHtml()
+          import { defineEventHandler, queryCollection, useNuxtContentBodyHtml } from '#imports';
 
-          export default defineNitroPlugin(nitroApp => {
-            const bodyHtmls = {}
+          const nuxtContentBodyHtml = useNuxtContentBodyHtml();
 
-            nitroApp.hooks.hook('content:file:beforeParse', async file =>
-              bodyHtmls[file._id] = await nuxtContentBodyHtml.generate(file, {
-                rehypePlugins: {
-                  ['${packageName`rehype-urls`}']: { transform: url => new URL(url.href, 'https://foo.com') },
-                },
-              })
-            )
-            nitroApp.hooks.hook('content:file:afterParse', file => (file.bodyHtml = bodyHtmls[file._id]))
-          })
+          export default defineEventHandler(async event => {
+            const file = await queryCollection(event, 'content').first();
+            return nuxtContentBodyHtml.generate(file, {
+              rehypePlugins: {
+                ['${packageName`rehype-urls`}']: { options: url => new URL(url.href, 'https://foo.com') },
+              },
+            });
+          });
         `,
       });
 
-      const nuxt = execaCommand('nuxt dev', { env: { NODE_ENV: '' } });
+      const nuxt = execaCommand('nuxt dev', {
+        env: { NODE_ENV: '' },
+        stderr: 'inherit',
+      });
 
       try {
         await nuxtDevReady();
 
         expect(
-          axios.get('http://localhost:3000/api/_content/query?_path=/home')
+          axios.get('http://localhost:3000/api/content')
             |> await
-            |> property('data')
-            |> first
-            |> property('bodyHtml'),
+            |> property('data'),
         ).toEqual('<p><a href="https://foo.com/bar">Link</a></p>');
       } finally {
         await kill(nuxt.pid);
       }
     },
-    'disable highlight after enable': async () => {
+    async 'disable highlight via module'() {
       await outputFiles({
+        'content.config.js': endent`
+          import { defineContentConfig, defineCollection, z } from '@nuxt/content';
+
+          export default defineContentConfig({
+            collections: {
+              content: defineCollection({
+                source: '**',
+                type: 'page',
+                schema: z.object({ bodyHtml: z.string() }),
+              }),
+            },
+          });
+        `,
         'content/home.md': endent`
           \`\`\`js
           export default () => {}
@@ -111,34 +148,50 @@ export default tester(
         'nuxt.config.js': endent`
           export default {
             modules: [
-              ['${packageName`@nuxt/content`}', { highlight: true }],
+              '${packageName`@nuxt/content`}',
               ['self', { fields: { bodyHtml: { highlight: false } } }],
             ],
           }
         `,
+        'server/api/content.get.js': endent`
+          import { defineEventHandler, queryCollection } from '#imports';
+
+          export default defineEventHandler(event => queryCollection(event, 'content').select('bodyHtml').first());
+        `,
       });
 
-      const nuxt = execaCommand('nuxt dev', { env: { NODE_ENV: '' } });
+      const nuxt = execaCommand('nuxt dev', {
+        env: { NODE_ENV: '' },
+        stderr: 'inherit',
+      });
 
       try {
         await nuxtDevReady();
 
         expect(
-          axios.get('http://localhost:3000/api/_content/query?_path=/home')
+          axios.get('http://localhost:3000/api/content')
             |> await
-            |> property('data')
-            |> first
-            |> property('bodyHtml'),
-        ).toEqual(endent`
-          <pre><code __ignoreMap="">export default () => {}
-          </code></pre>
-        `);
+            |> property('data.bodyHtml'),
+        ).toMatchSnapshot(this);
       } finally {
         await kill(nuxt.pid);
       }
     },
     async highlight() {
       await outputFiles({
+        'content.config.js': endent`
+          import { defineContentConfig, defineCollection, z } from '@nuxt/content';
+
+          export default defineContentConfig({
+            collections: {
+              content: defineCollection({
+                source: '**',
+                type: 'page',
+                schema: z.object({ bodyHtml: z.string() }),
+              }),
+            },
+          });
+        `,
         'content/home.md': endent`
           \`\`\`js
           export default () => {}
@@ -147,24 +200,30 @@ export default tester(
         'nuxt.config.js': endent`
           export default {
             modules: [
-              ['${packageName`@nuxt/content`}', { highlight: true }],
+              '${packageName`@nuxt/content`}',
               ['self', { fields: { bodyHtml: {} } }],
             ],
           }
         `,
+        'server/api/content.get.js': endent`
+          import { defineEventHandler, queryCollection } from '#imports';
+
+          export default defineEventHandler(event => queryCollection(event, 'content').select('bodyHtml').first());
+        `,
       });
 
-      const nuxt = execaCommand('nuxt dev', { env: { NODE_ENV: '' } });
+      const nuxt = execaCommand('nuxt dev', {
+        env: { NODE_ENV: '' },
+        stderr: 'inherit',
+      });
 
       try {
         await nuxtDevReady();
 
         expect(
-          axios.get('http://localhost:3000/api/_content/query?_path=/home')
+          axios.get('http://localhost:3000/api/content')
             |> await
-            |> property('data')
-            |> first
-            |> property('bodyHtml')
+            |> property('data.bodyHtml')
             |> replace(/ct-....../g, 'ct-123456'),
         ).toMatchSnapshot(this);
       } finally {
@@ -173,6 +232,19 @@ export default tester(
     },
     iframe: async () => {
       await outputFiles({
+        'content.config.js': endent`
+          import { defineContentConfig, defineCollection, z } from '@nuxt/content';
+
+          export default defineContentConfig({
+            collections: {
+              content: defineCollection({
+                source: '**',
+                type: 'page',
+                schema: z.object({ bodyHtml: z.string() }),
+              }),
+            },
+          });
+        `,
         'content/home.md': '<iframe></iframe>',
         'nuxt.config.js': endent`
           export default {
@@ -182,19 +254,25 @@ export default tester(
             ],
           }
         `,
+        'server/api/content.get.js': endent`
+          import { defineEventHandler, queryCollection } from '#imports';
+
+          export default defineEventHandler(event => queryCollection(event, 'content').select('bodyHtml').first());
+        `,
       });
 
-      const nuxt = execaCommand('nuxt dev', { env: { NODE_ENV: '' } });
+      const nuxt = execaCommand('nuxt dev', {
+        env: { NODE_ENV: '' },
+        stderr: 'inherit',
+      });
 
       try {
         await nuxtDevReady();
 
         expect(
-          axios.get('http://localhost:3000/api/_content/query?_path=/home')
+          axios.get('http://localhost:3000/api/content')
             |> await
-            |> property('data')
-            |> first
-            |> property('bodyHtml'),
+            |> property('data.bodyHtml'),
         ).toEqual('<iframe></iframe>');
       } finally {
         await kill(nuxt.pid);
@@ -202,6 +280,19 @@ export default tester(
     },
     'inline code': async () => {
       await outputFiles({
+        'content.config.js': endent`
+          import { defineContentConfig, defineCollection, z } from '@nuxt/content';
+
+          export default defineContentConfig({
+            collections: {
+              content: defineCollection({
+                source: '**',
+                type: 'page',
+                schema: z.object({ bodyHtml: z.string() }),
+              }),
+            },
+          });
+        `,
         'content/home.md': 'foo `bar` baz',
         'nuxt.config.js': endent`
           export default {
@@ -211,26 +302,45 @@ export default tester(
             ],
           }
         `,
+        'server/api/content.get.js': endent`
+          import { defineEventHandler, queryCollection } from '#imports';
+
+          export default defineEventHandler(event => queryCollection(event, 'content').select('bodyHtml').first());
+        `,
       });
 
-      const nuxt = execaCommand('nuxt dev', { env: { NODE_ENV: '' } });
+      const nuxt = execaCommand('nuxt dev', {
+        env: { NODE_ENV: '' },
+        stderr: 'inherit',
+      });
 
       try {
         await nuxtDevReady();
 
         expect(
-          axios.get('http://localhost:3000/api/_content/query?_path=/home')
+          axios.get('http://localhost:3000/api/content')
             |> await
-            |> property('data')
-            |> first
-            |> property('bodyHtml'),
-        ).toEqual('<p>foo <code>bar</code> baz</p>');
+            |> property('data.bodyHtml'),
+        ).toEqual('<p>foo <code class="">bar</code> baz</p>');
       } finally {
         await kill(nuxt.pid);
       }
     },
     'multiple fields': async () => {
       await outputFiles({
+        'content.config.js': endent`
+          import { defineContentConfig, defineCollection, z } from '@nuxt/content';
+
+          export default defineContentConfig({
+            collections: {
+              content: defineCollection({
+                source: '**',
+                type: 'page',
+                schema: z.object({ bar: z.string(), foo: z.string() }),
+              }),
+            },
+          });
+        `,
         'content/home.md': endent`
           # Foo
 
@@ -244,19 +354,25 @@ export default tester(
             ],
           }
         `,
+        'server/api/content.get.js': endent`
+          import { defineEventHandler, queryCollection } from '#imports';
+
+          export default defineEventHandler(event => queryCollection(event, 'content').select('bar', 'foo').first());
+        `,
       });
 
-      const nuxt = execaCommand('nuxt dev', { env: { NODE_ENV: '' } });
+      const nuxt = execaCommand('nuxt dev', {
+        env: { NODE_ENV: '' },
+        stderr: 'inherit',
+      });
 
       try {
         await nuxtDevReady();
 
         expect(
-          axios.get('http://localhost:3000/api/_content/query?_path=/home')
+          axios.get('http://localhost:3000/api/content')
             |> await
-            |> property('data')
-            |> first
-            |> pick(['foo', 'bar']),
+            |> property('data'),
         ).toEqual({
           bar: '<h1 id="foo">Foo</h1><p>Foo bar baz</p>',
           foo: '<h1 id="foo">Foo</h1><p>Foo bar baz</p>',
@@ -267,6 +383,19 @@ export default tester(
     },
     'non-markdown file': async () => {
       await outputFiles({
+        'content.config.js': endent`
+          import { defineContentConfig, defineCollection, z } from '@nuxt/content';
+
+          export default defineContentConfig({
+            collections: {
+              content: defineCollection({
+                source: '**',
+                type: 'page',
+                schema: z.object({ bodyHtml: z.string() }),
+              }),
+            },
+          });
+        `,
         'content/home.json': '',
         'nuxt.config.js': endent`
           export default {
@@ -276,26 +405,45 @@ export default tester(
             ],
           }
         `,
+        'server/api/content.get.js': endent`
+          import { defineEventHandler, queryCollection } from '#imports';
+
+          export default defineEventHandler(event => queryCollection(event, 'content').select('bodyHtml').first());
+        `,
       });
 
-      const nuxt = execaCommand('nuxt dev', { env: { NODE_ENV: '' } });
+      const nuxt = execaCommand('nuxt dev', {
+        env: { NODE_ENV: '' },
+        stderr: 'inherit',
+      });
 
       try {
         await nuxtDevReady();
 
         expect(
-          axios.get('http://localhost:3000/api/_content/query?_path=/home')
+          axios.get('http://localhost:3000/api/content')
             |> await
-            |> property('data')
-            |> first
-            |> property('bodyHtml'),
-        ).toBeUndefined();
+            |> property('data.bodyHtml'),
+        ).toEqual(null);
       } finally {
         await kill(nuxt.pid);
       }
     },
     works: async () => {
       await outputFiles({
+        'content.config.js': endent`
+          import { defineContentConfig, defineCollection, z } from '@nuxt/content';
+
+          export default defineContentConfig({
+            collections: {
+              content: defineCollection({
+                source: '**',
+                type: 'page',
+                schema: z.object({ bodyHtml: z.string() }),
+              }),
+            },
+          });
+        `,
         'content/home.md': endent`
           # Foo
 
@@ -309,19 +457,25 @@ export default tester(
             ],
           }
         `,
+        'server/api/content.get.js': endent`
+          import { defineEventHandler, queryCollection } from '#imports';
+
+          export default defineEventHandler(event => queryCollection(event, 'content').select('bodyHtml').first());
+        `,
       });
 
-      const nuxt = execaCommand('nuxt dev', { env: { NODE_ENV: '' } });
+      const nuxt = execaCommand('nuxt dev', {
+        env: { NODE_ENV: '' },
+        stderr: 'inherit',
+      });
 
       try {
         await nuxtDevReady();
 
         expect(
-          axios.get('http://localhost:3000/api/_content/query?_path=/home')
+          axios.get('http://localhost:3000/api/content')
             |> await
-            |> property('data')
-            |> first
-            |> property('bodyHtml'),
+            |> property('data.bodyHtml'),
         ).toEqual('<h1 id="foo">Foo</h1><p>Foo bar baz</p>');
       } finally {
         await kill(nuxt.pid);
