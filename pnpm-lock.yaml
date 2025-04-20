@@ -64,8 +64,8 @@ importers:
         specifier: ^2.0.32
         version: 2.0.32
       rehype-urls:
-        specifier: npm:@dword-design/rehype-urls@^0.0.1
-        version: '@dword-design/rehype-urls@0.0.1'
+        specifier: ^1.2.0
+        version: 1.2.0
       tree-kill-promise:
         specifier: ^3.0.14
         version: 3.0.14
@@ -911,9 +911,6 @@ packages:
 
   '@dword-design/prettier-plugin-compactify@0.0.1':
     resolution: {integrity: sha512-CsZP1JqqxKhfxnFdvSCB4MYbKbpoLWzB5llLCjDEvd248Scxgw2msdr7W//u3NJJSWmX2ohrbFsxgrUqx81rhA==}
-
-  '@dword-design/rehype-urls@0.0.1':
-    resolution: {integrity: sha512-ZPtr44motyKRwNWbVSH8DAV6kPIEPziipHCNt3GpYwRWIXeVj+vYShTLbevwPdXyQ3FQ7S0CckRnZ6V/nzn0tg==}
 
   '@dword-design/setup-test@1.0.2':
     resolution: {integrity: sha512-W861E4cbZmUaYri3mhZNfpo2Yxc1hHPP0v5iDZGE+h9EHplY+8tzWaTNHIF67DmrcDLP79zxd/lkJX0xZs0l8Q==}
@@ -7604,6 +7601,9 @@ packages:
   rehype-sort-attributes@5.0.1:
     resolution: {integrity: sha512-Bxo+AKUIELcnnAZwJDt5zUDDRpt4uzhfz9d0PVGhcxYWsbFj5Cv35xuWxu5r1LeYNFNhgGqsr9Q2QiIOM/Qctg==}
 
+  rehype-urls@1.2.0:
+    resolution: {integrity: sha512-+ygQd999ts0DxhTqttYmH0w0jK2ysE5lLjaJkSI4xd63XUB+g+TYXZtwXngr38QDMIVizquB2Bo35JNVggCL3A==}
+
   release-zalgo@1.0.0:
     resolution: {integrity: sha512-gUAyHVHPPC5wdqX/LG4LWtRYtgjxyX78oanFNTMMyFEfOqdC54s3eE82imuWKbOeqYht2CrNf64Qb8vgmmtZGA==}
     engines: {node: '>=4'}
@@ -10579,12 +10579,6 @@ snapshots:
       prettier: 3.5.3
     transitivePeerDependencies:
       - supports-color
-
-  '@dword-design/rehype-urls@0.0.1':
-    dependencies:
-      hast-util-has-property: 1.0.4
-      stdopt: 2.2.0
-      unist-util-visit: 1.4.1
 
   '@dword-design/setup-test@1.0.2': {}
 
@@ -18873,6 +18867,12 @@ snapshots:
     dependencies:
       '@types/hast': 3.0.4
       unist-util-visit: 5.0.0
+
+  rehype-urls@1.2.0:
+    dependencies:
+      hast-util-has-property: 1.0.4
+      stdopt: 2.2.0
+      unist-util-visit: 1.4.1
 
   release-zalgo@1.0.0:
     dependencies:

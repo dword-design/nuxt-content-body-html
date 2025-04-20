@@ -51,7 +51,7 @@
     "nuxt": "^3.16.2",
     "nuxt-dev-ready": "^2.0.1",
     "output-files": "^2.0.32",
-    "rehype-urls": "npm:@dword-design/rehype-urls@^0.0.1",
+    "rehype-urls": "^1.2.0",
     "tree-kill-promise": "^3.0.14"
   },
   "peerDependencies": {

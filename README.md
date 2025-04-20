@@ -180,7 +180,7 @@ export default defineEventHandler(event => {
 
 You can customize the module so that you can use the resulting HTML code for RSS feeds.
 
-Firstly, RSS feeds require URLs to be absolute. You can use [rehype-urls](https://github.com/brechtcs/rehype-urls) to make relative URLs absolute. At the time of writing, the npm version is not compatible with `@nuxt/content@^2`, you will need to fix the issue in [this PR](https://github.com/brechtcs/rehype-urls/pull/3).
+RSS feeds require URLs to be absolute. You can use [rehype-urls](https://github.com/brechtcs/rehype-urls) to make relative URLs absolute.
 
 ```js
 // nuxt.config.js
