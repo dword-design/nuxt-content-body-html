@@ -1,7 +1,5 @@
 {
   "name": "@dword-design/node",
-  "nodeVersion": 18,
-  "supportedNodeVersions": [16, 18],
   "seeAlso": [
     { "repository": "nuxt-content-git", "description": "Adds a property to each @nuxt/content document containing the raw HTML body, rendered from markdown." },
     { "repository": "nuxt-mail", "description": "Adds email sending capability to a Nuxt.js app. Adds a server route, an injected variable, and uses nodemailer to send emails." },
@@ -12,7 +10,7 @@
   "eslintConfig": {
     "extends": "@dword-design/eslint-config",
     "rules": {
-      "import/no-unresolved": ["error", { "ignore": ["#imports"] }]
+      "import/no-unresolved": ["error", { "ignore": ["#imports", "#mdc-imports"] }]
     }
   }
 }

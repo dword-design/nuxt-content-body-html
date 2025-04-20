@@ -1,77 +1,51 @@
-import {
-  addServerPlugin,
-  createResolver,
-  isNuxt3 as isNuxt3Try,
-} from '@nuxt/kit'
-import defu from 'defu'
-import { toHtml } from 'hast-util-to-html'
-import { mapValues, pick } from 'lodash-es'
-import pProps from 'p-props'
-import resolveCwd from 'resolve-cwd'
+import { addServerImports, createResolver } from '@nuxt/kit';
+import defu from 'defu';
+import { mapValues } from 'lodash-es';
+import pProps from 'p-props';
 
-import revertCompilerChanges from './revert-compiler-changes.js'
+import generate from './generate.js';
 
-const resolver = createResolver(import.meta.url)
+const resolver = createResolver(import.meta.url);
 
-export default function (options, nuxt) {
-  let isNuxt3 = true
-  try {
-    isNuxt3 = isNuxt3Try()
-  } catch {
-    isNuxt3 = false
-  }
-  nuxt = nuxt || this
-  options = defu(options, nuxt.options.nuxtContentBodyHtml, { fields: {} })
-  if (!isNuxt3 && Object.keys(options.fields).length === 0) {
-    options.fields.bodyHtml = {}
-  }
-  if (isNuxt3) {
-    nuxt.options.runtimeConfig.nuxtContentBodyHtml = options
-    nuxt.hook('nitro:config', nitroConfig => {
-      if (!nitroConfig.imports) {
-        nitroConfig.imports = {
-          imports: [],
-        }
-      }
-      nitroConfig.imports.imports.push({
-        from: resolver.resolve('./composable.js'),
-        name: 'useNuxtContentBodyHtml',
-      })
-    })
-    if (Object.keys(options.fields).length > 0) {
-      addServerPlugin(resolver.resolve('./server-plugin.js'))
-    }
-  } else {
-    nuxt.nuxt.hook('content:file:beforeInsert', async file => {
+export default (options, nuxt) => {
+  options = defu(options, nuxt.options.nuxtContentBodyHtml, { fields: {} });
+
+  addServerImports([
+    {
+      from: resolver.resolve('./composable.js'),
+      name: 'useNuxtContentBodyHtml',
+    },
+  ]);
+
+  if (Object.keys(options.fields).length > 0) {
+    let markdownOptions;
+
+    nuxt.hook(
+      'content:file:beforeParse',
+      ({ parserOptions }) =>
+        (markdownOptions = {
+          ...parserOptions.markdown,
+          /**
+           * parserOptions passed to the context resets the highlighter, but we do not want that.
+           * https://github.com/nuxt/content/blob/1f66e8b35b8f3810ab95a3a1ddb692de8b2c77a3/src/utils/content/index.ts#L149
+           */
+          highlight: nuxt.options.mdc.highlight,
+        }),
+    );
+
+    nuxt.hook('content:file:afterParse', async ({ file, content }) => {
       if (file.extension !== '.md') {
-        return
+        return;
       }
 
-      const Markdown = await import(
-        resolveCwd('@nuxt/content/parsers/markdown/index.js')
-      )
       Object.assign(
-        file,
+        content,
         await pProps(
-          mapValues(options.fields, async fieldConfig => {
-            const mergedOptions = (
-              await import(resolveCwd('@nuxt/content'))
-            ).getOptions({
-              markdown: pick(fieldConfig, [
-                'remarkPlugins',
-                'rehypePlugins',
-                'highlighter',
-              ]),
-            })
-
-            const parser = new Markdown(mergedOptions.markdown)
-
-            return toHtml(
-              revertCompilerChanges(await parser.generateBody(file.text)),
-            )
-          }),
+          mapValues(options.fields, fieldConfig =>
+            generate(file, fieldConfig, markdownOptions),
+          ),
         ),
-      )
-    })
+      );
+    });
   }
-}
+};
