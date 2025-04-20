@@ -34,22 +34,22 @@
   "dependencies": {
     "@nuxt/kit": "^3.16.2",
     "defu": "^6.1.4",
-    "hast-util-to-html": "^8.0.4",
+    "hast-util-to-html": "^9.0.5",
     "lodash-es": "^4.17.21",
-    "p-props": "^5.0.0"
+    "p-props": "^6.0.0"
   },
   "devDependencies": {
     "@dword-design/base": "^11.2.10",
-    "@dword-design/functions": "^5.0.27",
+    "@dword-design/functions": "^6.0.2",
     "@dword-design/tester": "^2.0.19",
     "@dword-design/tester-plugin-tmp-dir": "^2.1.26",
     "@nuxt/content": "^3.4.0",
-    "axios": "^0.22.0",
+    "axios": "^1.8.4",
     "depcheck-package-name": "^3.0.1",
-    "execa": "^7.2.0",
+    "execa": "^9.5.2",
     "fs-extra": "^11.3.0",
     "nuxt": "^3.16.2",
-    "nuxt-dev-ready": "^2.0.1",
+    "nuxt-dev-ready": "^3.0.0",
     "output-files": "^2.0.32",
     "rehype-urls": "^1.2.0",
     "tree-kill-promise": "^3.0.14"
