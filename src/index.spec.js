@@ -1,10 +1,11 @@
-import { endent, property, replace } from '@dword-design/functions';
+import { endent, property, replace, consoleLog } from '@dword-design/functions';
 import tester from '@dword-design/tester';
 import testerPluginTmpDir from '@dword-design/tester-plugin-tmp-dir';
 import axios from 'axios';
 import packageName from 'depcheck-package-name';
 import { execaCommand } from 'execa';
 import fs from 'fs-extra';
+import { toHtml } from 'hast-util-to-html';
 import nuxtDevReady from 'nuxt-dev-ready';
 import outputFiles from 'output-files';
 import kill from 'tree-kill-promise';
@@ -381,6 +382,60 @@ export default tester(
         await kill(nuxt.pid);
       }
     },
+    async newlines() {
+      await outputFiles({
+        'content.config.js': endent`
+          import { defineContentConfig, defineCollection, z } from '@nuxt/content';
+
+          export default defineContentConfig({
+            collections: {
+              content: defineCollection({
+                source: '**',
+                type: 'page',
+                schema: z.object({ bodyHtml: z.any() }),
+              }),
+            },
+          });
+        `,
+        'content/home.md': endent`
+          \`\`\`js
+          export default () => {
+          }
+          \`\`\`
+        `,
+        'nuxt.config.js': endent`
+          export default {
+            modules: [
+              '${packageName`@nuxt/content`}',
+              ['self', { fields: { bodyHtml: {} } }],
+            ],
+            content: { build: { markdown: { highlight: false } } },
+          };
+        `,
+        'server/api/content.get.js': endent`
+          import { defineEventHandler, queryCollection } from '#imports';
+
+          export default defineEventHandler(event => queryCollection(event, 'content').select('bodyHtml').first());
+        `,
+      });
+
+      const nuxt = execaCommand('nuxt dev', {
+        env: { NODE_ENV: '' },
+        stdio: 'inherit',
+      });
+
+      try {
+        await nuxtDevReady();
+
+        const html = axios.get('http://localhost:3000/api/content')
+          |> await
+          |> property('data.bodyHtml');
+        console.log('html in test', html)
+        expect(html).toMatchSnapshot(this);
+      } finally {
+        await kill(nuxt.pid);
+      }
+    },
     'non-markdown file': async () => {
       await outputFiles({
         'content.config.js': endent`
@@ -483,7 +538,7 @@ export default tester(
     },
   },
   [
-    testerPluginTmpDir(),
+    testerPluginTmpDir({ unsafeCleanup: false }),
     {
       beforeEach: async () => {
         await fs.outputFile(
