@@ -1,10 +1,22 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`index code 1`] = `"<pre class=\\"language-js\\" code=\\"export default () => {}\\\\n\\" language=\\"js\\" meta=\\"\\"><code __ignoreMap=\\"\\">export default () => {}\\\\n</code></pre>"`;
+exports[`index code 1`] = `
+"<pre class=\\"language-js\\" code=\\"export default () => {}
+\\" language=\\"js\\" meta=\\"\\"><code __ignoreMap=\\"\\">export default () => {}
+</code></pre>"
+`;
 
-exports[`index disable highlight via module 1`] = `"<pre class=\\"language-js\\" code=\\"export default () => {}\\\\n\\" language=\\"js\\" meta=\\"\\"><code __ignoreMap=\\"\\">export default () => {}\\\\n</code></pre>"`;
+exports[`index disable highlight via module 1`] = `
+"<pre class=\\"language-js\\" code=\\"export default () => {}
+\\" language=\\"js\\" meta=\\"\\"><code __ignoreMap=\\"\\">export default () => {}
+</code></pre>"
+`;
 
-exports[`index highlight 1`] = `"<pre class=\\"language-js shiki shiki-themes github-light github-dark\\" code=\\"export default () => {}\\\\n\\" language=\\"js\\" meta=\\"\\" style=\\"\\"><code __ignoreMap=\\"\\"><span class=\\"line\\" line=\\"1\\"><span class=\\"szBVR\\">export</span><span class=\\"szBVR\\"> default</span><span class=\\"sVt8B\\"> () </span><span class=\\"szBVR\\">=></span><span class=\\"sVt8B\\"> {}\\\\n</span></span></code></pre><style>html pre.shiki code .szBVR, html code.shiki .szBVR{--shiki-default:#D73A49;--shiki-dark:#F97583}html pre.shiki code .sVt8B, html code.shiki .sVt8B{--shiki-default:#24292E;--shiki-dark:#E1E4E8}html .default .shiki span {color: var(--shiki-default);background: var(--shiki-default-bg);font-style: var(--shiki-default-font-style);font-weight: var(--shiki-default-font-weight);text-decoration: var(--shiki-default-text-decoration);}html .shiki span {color: var(--shiki-default);background: var(--shiki-default-bg);font-style: var(--shiki-default-font-style);font-weight: var(--shiki-default-font-weight);text-decoration: var(--shiki-default-text-decoration);}html .dark .shiki span {color: var(--shiki-dark);background: var(--shiki-dark-bg);font-style: var(--shiki-dark-font-style);font-weight: var(--shiki-dark-font-weight);text-decoration: var(--shiki-dark-text-decoration);}html.dark .shiki span {color: var(--shiki-dark);background: var(--shiki-dark-bg);font-style: var(--shiki-dark-font-style);font-weight: var(--shiki-dark-font-weight);text-decoration: var(--shiki-dark-text-decoration);}</style>"`;
+exports[`index highlight 1`] = `
+"<pre class=\\"language-js shiki shiki-themes github-light github-dark\\" code=\\"export default () => {}
+\\" language=\\"js\\" meta=\\"\\" style=\\"\\"><code __ignoreMap=\\"\\"><span class=\\"line\\" line=\\"1\\"><span class=\\"szBVR\\">export</span><span class=\\"szBVR\\"> default</span><span class=\\"sVt8B\\"> () </span><span class=\\"szBVR\\">=></span><span class=\\"sVt8B\\"> {}
+</span></span></code></pre><style>html pre.shiki code .szBVR, html code.shiki .szBVR{--shiki-default:#D73A49;--shiki-dark:#F97583}html pre.shiki code .sVt8B, html code.shiki .sVt8B{--shiki-default:#24292E;--shiki-dark:#E1E4E8}html .default .shiki span {color: var(--shiki-default);background: var(--shiki-default-bg);font-style: var(--shiki-default-font-style);font-weight: var(--shiki-default-font-weight);text-decoration: var(--shiki-default-text-decoration);}html .shiki span {color: var(--shiki-default);background: var(--shiki-default-bg);font-style: var(--shiki-default-font-style);font-weight: var(--shiki-default-font-weight);text-decoration: var(--shiki-default-text-decoration);}html .dark .shiki span {color: var(--shiki-dark);background: var(--shiki-dark-bg);font-style: var(--shiki-dark-font-style);font-weight: var(--shiki-dark-font-weight);text-decoration: var(--shiki-dark-text-decoration);}html.dark .shiki span {color: var(--shiki-dark);background: var(--shiki-dark-bg);font-style: var(--shiki-dark-font-style);font-weight: var(--shiki-dark-font-weight);text-decoration: var(--shiki-dark-text-decoration);}</style>"
+`;
 
 exports[`index newlines 1`] = `
 "<pre class=\\"language-js\\" code=\\"export default () => {

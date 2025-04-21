@@ -177,6 +177,55 @@ export default tester(
         await kill(nuxt.pid);
       }
     },
+    emoji: async () => {
+      await outputFiles({
+        'content.config.js': endent`
+          import { defineContentConfig, defineCollection, z } from '@nuxt/content';
+
+          export default defineContentConfig({
+            collections: {
+              content: defineCollection({
+                source: '**',
+                type: 'page',
+                schema: z.object({ bodyHtml: z.string() }),
+              }),
+            },
+          });
+        `,
+        'content/home.md': '🙂',
+        'nuxt.config.js': endent`
+          export default {
+            modules: [
+              '${packageName`@nuxt/content`}',
+              ['self', { fields: { bodyHtml: {} } }],
+            ],
+          };
+        `,
+        'server/api/content.get.js': endent`
+          import { defineEventHandler, queryCollection } from '#imports';
+
+          export default defineEventHandler(event => queryCollection(event, 'content').select('bodyHtml').first());
+        `,
+      });
+
+      const nuxt = execaCommand('nuxt dev', {
+        env: { NODE_ENV: '' },
+        stderr: 'inherit',
+      });
+
+      try {
+        await nuxtDevReady();
+
+        const html =
+          axios.get('http://localhost:3000/api/content')
+          |> await
+          |> property('data.bodyHtml');
+
+        expect(html).toEqual('<p>🙂</p>');
+      } finally {
+        await kill(nuxt.pid);
+      }
+    },
     async highlight() {
       await outputFiles({
         'content.config.js': endent`
