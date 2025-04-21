@@ -1,3 +1,10 @@
+## [4.0.1](https://github.com/dword-design/nuxt-content-body-html/compare/v4.0.0...v4.0.1) (2025-04-21)
+
+
+### Bug Fixes
+
+* update pnpm to v10.9.0 ([#103](https://github.com/dword-design/nuxt-content-body-html/issues/103)) ([a1a63db](https://github.com/dword-design/nuxt-content-body-html/commit/a1a63db8bc36b861c7a3496aee2c2717ede788b4))
+
 # [4.0.0](https://github.com/dword-design/nuxt-content-body-html/compare/v3.0.2...v4.0.0) (2025-04-20)
 
 
