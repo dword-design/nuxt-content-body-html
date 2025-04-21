@@ -1,11 +1,10 @@
-import { endent, property, replace, consoleLog } from '@dword-design/functions';
+import { endent, property, replace } from '@dword-design/functions';
 import tester from '@dword-design/tester';
 import testerPluginTmpDir from '@dword-design/tester-plugin-tmp-dir';
 import axios from 'axios';
 import packageName from 'depcheck-package-name';
 import { execaCommand } from 'execa';
 import fs from 'fs-extra';
-import { toHtml } from 'hast-util-to-html';
 import nuxtDevReady from 'nuxt-dev-ready';
 import outputFiles from 'output-files';
 import kill from 'tree-kill-promise';
@@ -392,7 +391,7 @@ export default tester(
               content: defineCollection({
                 source: '**',
                 type: 'page',
-                schema: z.object({ bodyHtml: z.any() }),
+                schema: z.object({ bodyHtml: z.string() }),
               }),
             },
           });
@@ -421,16 +420,17 @@ export default tester(
 
       const nuxt = execaCommand('nuxt dev', {
         env: { NODE_ENV: '' },
-        stdio: 'inherit',
+        stderr: 'inherit',
       });
 
       try {
         await nuxtDevReady();
 
-        const html = axios.get('http://localhost:3000/api/content')
+        const html =
+          axios.get('http://localhost:3000/api/content')
           |> await
           |> property('data.bodyHtml');
-        console.log('html in test', html)
+
         expect(html).toMatchSnapshot(this);
       } finally {
         await kill(nuxt.pid);
@@ -538,7 +538,7 @@ export default tester(
     },
   },
   [
-    testerPluginTmpDir({ unsafeCleanup: false }),
+    testerPluginTmpDir(),
     {
       beforeEach: async () => {
         await fs.outputFile(
