@@ -1,3 +1,10 @@
+## [4.0.2](https://github.com/dword-design/nuxt-content-body-html/compare/v4.0.1...v4.0.2) (2025-04-21)
+
+
+### Bug Fixes
+
+* fix newlines ([aaf3d45](https://github.com/dword-design/nuxt-content-body-html/commit/aaf3d45770c5bdfc9a95ad49ba1a60d3f8bea241))
+
 ## [4.0.1](https://github.com/dword-design/nuxt-content-body-html/compare/v4.0.0...v4.0.1) (2025-04-21)
 
 
