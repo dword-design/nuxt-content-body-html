@@ -4,7 +4,6 @@ import testerPluginTmpDir from '@dword-design/tester-plugin-tmp-dir';
 import axios from 'axios';
 import packageName from 'depcheck-package-name';
 import { execaCommand } from 'execa';
-import fs from 'fs-extra';
 import nuxtDevReady from 'nuxt-dev-ready';
 import outputFiles from 'output-files';
 import kill from 'tree-kill-promise';
@@ -35,7 +34,7 @@ export default tester(
           export default {
             modules: [
               '${packageName`@nuxt/content`}',
-              ['self', { fields: { bodyHtml: {} } }],
+              ['../src/index.js', { fields: { bodyHtml: {} } }],
             ],
             content: { build: { markdown: { highlight: false } } },
           };
@@ -86,7 +85,7 @@ export default tester(
           export default {
             modules: [
               '${packageName`@nuxt/content`}',
-              'self',
+              '../src/index.js',
             ],
           }
         `,
@@ -149,7 +148,7 @@ export default tester(
           export default {
             modules: [
               '${packageName`@nuxt/content`}',
-              ['self', { fields: { bodyHtml: { highlight: false } } }],
+              ['../src/index.js', { fields: { bodyHtml: { highlight: false } } }],
             ],
           }
         `,
@@ -197,7 +196,7 @@ export default tester(
           export default {
             modules: [
               '${packageName`@nuxt/content`}',
-              ['self', { fields: { bodyHtml: {} } }],
+              ['../src/index.js', { fields: { bodyHtml: {} } }],
             ],
           };
         `,
@@ -250,7 +249,7 @@ export default tester(
           export default {
             modules: [
               '${packageName`@nuxt/content`}',
-              ['self', { fields: { bodyHtml: {} } }],
+              ['../src/index.js', { fields: { bodyHtml: {} } }],
             ],
           }
         `,
@@ -299,7 +298,7 @@ export default tester(
           export default {
             modules: [
               '${packageName`@nuxt/content`}',
-              ['self', { fields: { bodyHtml: {} } }],
+              ['../src/index.js', { fields: { bodyHtml: {} } }],
             ],
           }
         `,
@@ -347,7 +346,7 @@ export default tester(
           export default {
             modules: [
               '${packageName`@nuxt/content`}',
-              ['self', { fields: { bodyHtml: {} } }],
+              ['../src/index.js', { fields: { bodyHtml: {} } }],
             ],
           }
         `,
@@ -399,7 +398,7 @@ export default tester(
           export default {
             modules: [
               '${packageName`@nuxt/content`}',
-              ['self', { fields: { foo: {}, bar: {} } }],
+              ['../src/index.js', { fields: { foo: {}, bar: {} } }],
             ],
           }
         `,
@@ -455,7 +454,7 @@ export default tester(
           export default {
             modules: [
               '${packageName`@nuxt/content`}',
-              ['self', { fields: { bodyHtml: {} } }],
+              ['../src/index.js', { fields: { bodyHtml: {} } }],
             ],
             content: { build: { markdown: { highlight: false } } },
           };
@@ -505,7 +504,7 @@ export default tester(
           export default {
             modules: [
               '${packageName`@nuxt/content`}',
-              ['self', { fields: { bodyHtml: {} } }],
+              ['../src/index.js', { fields: { bodyHtml: {} } }],
             ],
           }
         `,
@@ -557,7 +556,7 @@ export default tester(
           export default {
             modules: [
               '${packageName`@nuxt/content`}',
-              ['self', { fields: { bodyHtml: {} } }],
+              ['../src/index.js', { fields: { bodyHtml: {} } }],
             ],
           }
         `,
@@ -586,21 +585,5 @@ export default tester(
       }
     },
   },
-  [
-    testerPluginTmpDir(),
-    {
-      beforeEach: async () => {
-        await fs.outputFile(
-          'node_modules/self/package.json',
-          JSON.stringify({
-            exports: './src/index.js',
-            name: 'self',
-            type: 'module',
-          }),
-        );
-
-        await fs.copy('../src', 'node_modules/self/src');
-      },
-    },
-  ],
+  [testerPluginTmpDir()],
 );
