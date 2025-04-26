@@ -40,8 +40,8 @@ importers:
         specifier: ^2.1.26
         version: 2.1.26
       '@nuxt/content':
-        specifier: npm:@dword-design/nuxt-content-fork@^0.1.1
-        version: '@dword-design/nuxt-content-fork@0.1.1(magicast@0.3.5)(typescript@5.8.3)'
+        specifier: npm:@dword-design/nuxt-content-fork@^3.0.0
+        version: '@dword-design/nuxt-content-fork@3.0.0(magicast@0.3.5)(typescript@5.8.3)'
       axios:
         specifier: ^1.8.4
         version: 1.8.4
@@ -891,8 +891,8 @@ packages:
     resolution: {integrity: sha512-ns0t/Fxwsf3Egva6SNEStZ/3TKTIgCJW4fGGtQoeAz3PWQRWumrqxTa3tM6dzU4w8thSi8dcaEjP6RRQJtvLhg==}
     engines: {node: '>= 14'}
 
-  '@dword-design/nuxt-content-fork@0.1.1':
-    resolution: {integrity: sha512-vhyCZcqPKmVkRSIG3bYzTckPL1JEOlg32eUgGvd4owcoXCmWpRiPaJHfaEYZda9Vdm2lwV8mDXV7Tz7717zVNw==}
+  '@dword-design/nuxt-content-fork@3.0.0':
+    resolution: {integrity: sha512-kLIqzJzbqD8Se1D2GSQsqbIPVu3hRYrDet+R30AcNVz6c+EMg6jdUy667kXATB6H8YTvHoFdPr5G94enzr0WLw==}
     peerDependencies:
       '@electric-sql/pglite': '*'
       '@libsql/client': '*'
@@ -10429,7 +10429,7 @@ snapshots:
       findup-sync: 0.4.3
       resolve-from: 5.0.0
 
-  '@dword-design/nuxt-content-fork@0.1.1(magicast@0.3.5)(typescript@5.8.3)':
+  '@dword-design/nuxt-content-fork@3.0.0(magicast@0.3.5)(typescript@5.8.3)':
     dependencies:
       '@nuxt/kit': 3.16.2(magicast@0.3.5)
       '@nuxtjs/mdc': https://pkg.pr.new/@nuxtjs/mdc@c44090f(magicast@0.3.5)
