@@ -44,7 +44,7 @@
     "@dword-design/functions": "^6.0.2",
     "@dword-design/tester": "^2.0.19",
     "@dword-design/tester-plugin-tmp-dir": "^2.1.26",
-    "@nuxt/content": "npm:@dword-design/nuxt-content-fork@^0.1.3",
+    "@nuxt/content": "npm:@dword-design/nuxt-content-fork@^3.0.0",
     "axios": "^1.9.0",
     "depcheck-package-name": "^3.0.1",
     "execa": "^9.6.0",
