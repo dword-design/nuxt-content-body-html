@@ -1,3 +1,10 @@
+## [4.0.4](https://github.com/dword-design/nuxt-content-body-html/compare/v4.0.3...v4.0.4) (2025-05-27)
+
+
+### Bug Fixes
+
+* lock file maintenance ([#106](https://github.com/dword-design/nuxt-content-body-html/issues/106)) ([a34af4e](https://github.com/dword-design/nuxt-content-body-html/commit/a34af4ec539763a463e428c4eea20927df659908))
+
 ## [4.0.3](https://github.com/dword-design/nuxt-content-body-html/compare/v4.0.2...v4.0.3) (2025-04-21)
 
 
