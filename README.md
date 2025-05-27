@@ -60,10 +60,10 @@ Sometimes you need the raw HTML code of `@nuxt/content` documents for processing
 
 ```bash
 # npm
-$ npm install nuxt-content-body-html
+$ npx nuxi module add nuxt-content-body-html
 
 # Yarn
-$ yarn add nuxt-content-body-html
+$ yarn nuxi module add nuxt-content-body-html
 ```
 <!-- /INSTALL -->
 
