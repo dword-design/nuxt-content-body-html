@@ -39,7 +39,7 @@
     "p-props": "^6.0.0"
   },
   "devDependencies": {
-    "@dword-design/base": "^12.0.9",
+    "@dword-design/base": "^13.0.0",
     "@dword-design/base-config-nuxt-module": "^1.0.4",
     "@dword-design/functions": "^6.0.2",
     "@dword-design/tester": "^2.0.19",
