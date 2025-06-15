@@ -49,7 +49,7 @@
     "depcheck-package-name": "^3.0.1",
     "execa": "^9.6.0",
     "nuxt": "^3.17.4",
-    "nuxt-dev-ready": "^3.0.0",
+    "nuxt-dev-ready": "^4.0.0",
     "output-files": "^2.0.32",
     "rehype-urls": "^1.2.0",
     "tree-kill-promise": "^3.0.14"
